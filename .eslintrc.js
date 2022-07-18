@@ -18,5 +18,10 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
+    quotes: ['error', 'single'],
+    'arrow-parens': 0,
+    'no-loop-func': 2,
+    'space-before-function-paren': ['error', 'never'],
+    indent: ['error', 2, { SwitchCase: 1 }]
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="text-amber-50">
     123
   </div>
 </template>
