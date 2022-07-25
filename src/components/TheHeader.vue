@@ -31,7 +31,7 @@ export default {
           <t-button class="mr-4" @click="$router.push('/loginRegister/register')">注册</t-button>
         </div>
 
-        <div v-else>
+        <div v-else class="flex justify-between">
           <t-dropdown>
             <p class="mr-4 cursor-pointer">张三</p>
             <template v-slot:dropdown>
@@ -42,6 +42,7 @@ export default {
               </t-dropdown-menu>
             </template>
           </t-dropdown>
+          <span class="cursor-pointer mr-8" @click="$router.push('controller')">控制台</span>
         </div>
       </template>
     </t-head-menu>

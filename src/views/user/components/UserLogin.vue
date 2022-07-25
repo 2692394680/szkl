@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import { MessagePlugin } from 'tdesign-vue-next'
-import { useRouter } from 'vue-router'
+import { getUserStore } from '@/store/modules/user_store'
+import { reactive } from 'vue'
 
-const router = useRouter()
-
-function login() {
-  localStorage.setItem('token', 'token')
-  router.push('/home')
-  MessagePlugin.success('登陆成功')
-}
+const userStore = getUserStore()
+const loginForm = reactive({
+  account: '',
+  password: ''
+})
+const loginRules = reactive({
+  account: [{
+    required: true,
+    message: '账号不能为空',
+    type: 'error'
+  }],
+  password: [{
+    required: true,
+    message: '密码不能为空',
+    type: 'error'
+  }]
+})
 </script>
 
 <template>
@@ -17,15 +27,15 @@ function login() {
       <span class="text-2xl mr-2">登录</span>
       <span class="text-gray-500 cursor-pointer" @click="$router.push('register')">注册</span>
     </div>
-    <t-form>
-      <t-form-item labelWidth="0">
-        <t-input placeholder="请输入用户名" size="large"></t-input>
+    <t-form :rules="loginRules" :data="loginForm" @submit="userStore.login($event,loginForm)">
+      <t-form-item labelWidth="0" name="account">
+        <t-input placeholder="请输入用户名" size="large" v-model="loginForm.account"></t-input>
+      </t-form-item>
+      <t-form-item labelWidth="0" name="password">
+        <t-input placeholder="请输入密码" type="password" size="large" v-model="loginForm.password"></t-input>
       </t-form-item>
       <t-form-item labelWidth="0">
-        <t-input placeholder="请输入密码" type="password" size="large"></t-input>
-      </t-form-item>
-      <t-form-item labelWidth="0">
-        <t-button size="large" block @click="login">登录</t-button>
+        <t-button size="large" block type="submit">登录</t-button>
       </t-form-item>
       <t-form-item labelWidth="0">
         <div class="flex justify-between w-full cursor-pointer text-gray-500">

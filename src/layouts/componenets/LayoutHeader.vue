@@ -2,15 +2,8 @@
 import TheHeader from '@/components/TheHeader.vue'
 </script>
 
-<script lang="ts">
-export default {
-  name: 'HomeView'
-}
-</script>
-
 <template>
-  <TheHeader></TheHeader>
-  <div>控制台</div>
+<TheHeader></TheHeader>
 </template>
 
 <style scoped lang="less">

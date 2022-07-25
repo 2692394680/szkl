@@ -1,6 +1,19 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+// 自动导入modules文件夹下所有ts文件
+const modules = import.meta.globEager('./modules/**/*.ts')
+// 路由暂存
+const routeModuleList: Array<RouteRecordRaw> = []
+Object.keys(modules).forEach(key => {
+  const mod = modules[key].default || {}
+  const modList = Array.isArray(mod) ? [...mod] : [mod]
+  routeModuleList.push(...modList)
+})
 
-const routes: Array<RouteRecordRaw> = [
+// 存放动态路由
+export const asyncRouterList: Array<RouteRecordRaw> = [...routeModuleList]
+
+// 存放固定路由
+export const defaultRouterList: Array<RouteRecordRaw> = [
   {
     path: '/',
     redirect: '/welcome'
@@ -11,32 +24,17 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/home/WelcomeView.vue')
   },
   {
-    path: '/home',
-    name: 'Home',
-    component: () => import('@/views/home/HomeView.vue')
-  },
-  {
     path: '/loginRegister/:type',
     name: 'LoginRegister',
     component: () => import('@/views/user/LoginRegisterView.vue')
-    // redirect: 'login',
-    // children: [
-    //   {
-    //     path: 'login',
-    //     name: 'Login',
-    //     component: () => import('@/views/user/UserLogin.vue')
-    //   }, {
-    //     path: 'register',
-    //     name: 'Register',
-    //     component: () => import('@/views/user/UserRegister.vue')
-    //   }
-    // ]
   }
 ]
 
+export const allRoutes = [...defaultRouterList, ...asyncRouterList]
+
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes: allRoutes
 })
 
 export default router

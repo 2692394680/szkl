@@ -11,6 +11,7 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "esnext",
       "dom"
@@ -23,8 +24,10 @@
       ]
     },
     "types": [
-      "node"
+      "node",
+      "vite/client"
     ],
+    "noEmit": true,
     "typeRoots": [
       "./node_modules/@types",
       "./types"
