@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import TheHeader from '@/components/TheHeader.vue'
 </script>
 
 <template>
-欢迎页
+  <TheHeader></TheHeader>
+  欢迎页
 </template>
 
 <style scoped lang="less">
