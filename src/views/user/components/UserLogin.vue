@@ -4,8 +4,8 @@ import { reactive } from 'vue'
 
 const userStore = getUserStore()
 const loginForm = reactive({
-  account: '',
-  password: ''
+  account: '123456789',
+  password: '123456'
 })
 const loginRules = reactive({
   account: [{

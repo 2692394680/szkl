@@ -12,7 +12,9 @@ const loginRoutePath = '/loginRegister/login'
 
 router.beforeEach(async(to, from, next) => {
   NProgress.start()
-  const { token } = userStore
+  const {
+    token
+  } = userStore
   if (token === 'main_token' && !whiteListRouters.includes(<string>to.name)) {
     next({ path: loginRoutePath })
     await MessagePlugin.error('当前没有访问权限，请登录后再访问')

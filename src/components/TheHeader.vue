@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { getUserStore } from '@/store/modules/user_store'
+import { onMounted } from 'vue'
 
-const { token } = getUserStore()
+const {
+  token,
+  userinfo
+} = getUserStore()
 const userStore = getUserStore()
-
+onMounted(() => {
+  if (!userinfo.value && token !== 'main_token') {
+    userStore.getUserInfo()
+  }
+})
 </script>
 <script lang="ts">
 export default {
@@ -17,14 +25,14 @@ export default {
       <p class="text-3xl text-white cursor-pointer" @click="$router.push('/')">SZKelian</p>
 
       <template #operations>
-        <div v-if="!token">
+        <div v-if="token==='main_token'">
           <t-button class="mr-3" @click="$router.push('/loginRegister/login')">登录</t-button>
           <t-button class="mr-4" @click="$router.push('/loginRegister/register')">注册</t-button>
         </div>
 
         <div v-else class="flex justify-between">
           <t-dropdown>
-            <p class="mr-4 cursor-pointer">张三</p>
+            <p class="mr-4 cursor-pointer">{{ userinfo.name }}</p>
             <template v-slot:dropdown>
               <t-dropdown-menu>
                 <t-dropdown-item>个人信息</t-dropdown-item>

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { MessagePlugin } from 'tdesign-vue-next'
@@ -7,12 +7,12 @@ import { getUserStore } from '@/store/modules/user_store'
 
 const request = axios.create({
   baseURL: 'http://81.69.253.228:8080',
-  headers: { [TOKEN_NAME]: localStorage.getItem(TOKEN_NAME) || '' },
   timeout: 5000
 })
 
-request.interceptors.request.use((config: AxiosRequestConfig) => {
+request.interceptors.request.use((config: any) => {
   nprogress.start()
+  config.headers[TOKEN_NAME] = localStorage.getItem(TOKEN_NAME) || ''
   return config
 }, (error: object) => {
   return Promise.reject(error)
@@ -31,7 +31,8 @@ request.interceptors.response.use((res: AxiosResponse) => {
       })
       return
     case 403:
-      userStore.logout().then(() => {})
+      userStore.logout().then(() => {
+      })
       MessagePlugin.error('登录信息失效，请重新登录').then(() => {
       })
       return
@@ -42,8 +43,7 @@ request.interceptors.response.use((res: AxiosResponse) => {
       })
   }
 }, (error: object) => {
-  MessagePlugin.error('请求失败，请稍后重试').then(r => {
-  })
+  MessagePlugin.error('请求失败，请稍后重试').then(() => {})
   return Promise.reject(error)
 })
 
