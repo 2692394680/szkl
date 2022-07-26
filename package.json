@@ -11,7 +11,7 @@
     "axios": "^0.27.2",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.14",
-    "tdesign-vue-next": "^0.17.3",
+    "tdesign-vue-next": "^0.18",
     "vue": "^3.2.25",
     "vue-router": "^4.0.13"
   },

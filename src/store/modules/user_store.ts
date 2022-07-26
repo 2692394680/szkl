@@ -16,6 +16,7 @@ export const useUserStore = defineStore('user', {
       console.log('getUserInfo')
     },
     async logout() {
+      await router.push('/loginRegister/login')
       localStorage.removeItem(TOKEN_NAME)
       sessionStorage.removeItem(USERINFO_NAME)
       this.token = 'main_token'
@@ -24,13 +25,8 @@ export const useUserStore = defineStore('user', {
     async login(event, data) {
       if (!event.validateResult) return
       const result: any = await login(data)
-      console.log(result)
-      if (result.code !== 200) {
-        await MessagePlugin.error('登陆失败，请重新登录')
-        return
-      }
-      this.userinfo = result.value
-      this.token = result.msg.substring(8, result.msg.length)
+      this.userinfo = result ? result.value : {}
+      this.token = result ? result.msg.substring(8, result.msg.length) : ''
       localStorage.setItem(TOKEN_NAME, this.token)
       sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
       await router.push('/configuration')

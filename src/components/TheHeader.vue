@@ -1,18 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { MessagePlugin } from 'tdesign-vue-next'
-import { useRouter } from 'vue-router'
+import { getUserStore } from '@/store/modules/user_store'
 
-const router = useRouter()
-const token = computed(() => {
-  return localStorage.getItem('token')
-})
+const { token } = getUserStore()
+const userStore = getUserStore()
 
-function logout() {
-  MessagePlugin.success('退出登录成功')
-  localStorage.removeItem('token')
-  router.push('/loginRegister/login')
-}
 </script>
 <script lang="ts">
 export default {
@@ -38,7 +29,7 @@ export default {
               <t-dropdown-menu>
                 <t-dropdown-item>个人信息</t-dropdown-item>
                 <t-dropdown-item>修改密码</t-dropdown-item>
-                <t-dropdown-item @click="logout">退出登录</t-dropdown-item>
+                <t-dropdown-item @click="userStore.logout()">退出登录</t-dropdown-item>
               </t-dropdown-menu>
             </template>
           </t-dropdown>

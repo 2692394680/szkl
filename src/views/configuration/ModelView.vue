@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { modelListGet } from '@/api/configuration_api'
-import { MessagePlugin } from 'tdesign-vue-next'
 
 const tableColumns = ref([
   {
-    colKey: 'index',
-    title: '组态名称',
+    colKey: 'moduleId',
+    title: '组态ID',
     // 对齐方式
     align: 'center',
     // 设置列类名
@@ -17,23 +16,28 @@ const tableColumns = ref([
     }
   },
   {
-    colKey: 'platform',
-    title: '所属组织'
+    colKey: 'moduleName',
+    title: '组态名称'
+  }, {
+    colKey: 'modulePath',
+    title: '组态路径'
+  }, {
+    colKey: 'deviceId',
+    title: '设备ID'
+  }, {
+    colKey: 'deviceMac',
+    title: '设备MAC'
   },
   {
-    colKey: 'type',
-    title: '模型名称'
-  },
-  {
-    colKey: 'default',
+    colKey: 'userId',
     title: '创建人'
   },
   {
-    colKey: 'needed',
-    title: '更新时间'
+    colKey: 'createTime',
+    title: '创建时间'
   },
   {
-    colKey: 'detail.position',
+    colKey: 'op',
     title: '操作',
     /**
      * 1.内容超出时，是否显示省略号。值为 true，则浮层默认显示单元格内容；
@@ -47,17 +51,13 @@ const tableData = ref([])
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
-  total: 28
+  total: 0
 })
 
 const getModuleList = async() => {
-  const result: any = modelListGet(tablePagination.defaultCurrent, tablePagination.defaultPageSize)
-  console.log(result)
-  if (result.code !== 200) {
-    await MessagePlugin.error('模型组态获取失败')
-    return
-  }
-  tableData.value = result.value.modules
+  const result: any = await modelListGet(tablePagination.defaultCurrent, tablePagination.defaultPageSize)
+  tableData.value = result ? result.value.modules : []
+  tablePagination.total = tableData.value.length
 }
 
 onMounted(() => {
@@ -74,8 +74,16 @@ onMounted(() => {
       </div>
     </div>
 
-    <t-table rowKey="index" :data="tableData" :cloumns="tableColumns" stripe bordered hover
-             :pagination="tablePagination" table-layout="fixed"></t-table>
+    <t-table row-key="moduleId" :data="tableData" :columns="tableColumns" stripe bordered hover
+                  table-layout="fixed"
+                  :pagination="tablePagination">
+      <template #op>
+        <div class="cursor-pointer text-blue-700">
+          <a class=" mr-4">编辑</a>
+          <a>删除</a>
+        </div>
+      </template>
+    </t-table>
   </div>
 </template>
 
