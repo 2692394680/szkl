@@ -14,20 +14,20 @@ export const useUserStore = defineStore('user', {
   actions: {
     async getUserInfo() {
       const result: any = await userinfoGet()
-      this.userinfo.value = result ? result.value : {}
+      this.userinfo = result ? result.value : {}
       sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
     async logout() {
       localStorage.removeItem(TOKEN_NAME)
       sessionStorage.removeItem(USERINFO_NAME)
       this.token = 'main_token'
-      this.userinfo.value = {}
+      this.userinfo = {}
       await router.push('/loginRegister/login')
     },
     async login(event, data) {
       if (!event.validateResult) return
       const result: any = await login(data)
-      this.userinfo.value = result ? result.value : {}
+      this.userinfo = result ? result.value : {}
       this.token = result ? result.msg.substring(8, result.msg.length) : ''
       localStorage.setItem(TOKEN_NAME, this.token)
       sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))

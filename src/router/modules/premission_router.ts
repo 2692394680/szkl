@@ -46,4 +46,9 @@ export default [{
       meta: { title: '用户管理' }
     }
   ]
+}, {
+  path: '/configuration/design',
+  name: 'Design',
+  component: () => import('@/views/configuration/DesignView.vue'),
+  meta: { title: '组态设计' }
 }]

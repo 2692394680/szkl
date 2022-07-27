@@ -70,13 +70,13 @@ onMounted(() => {
     <div class="flex justify-between mb-4">
       <div></div>
       <div>
-        <t-button>新增组态</t-button>
+        <t-button @click="$router.push('/configuration/design')">新增组态</t-button>
       </div>
     </div>
 
     <t-table row-key="moduleId" :data="tableData" :columns="tableColumns" stripe bordered hover
-                  table-layout="fixed"
-                  :pagination="tablePagination">
+             table-layout="fixed"
+             :pagination="tablePagination">
       <template #op>
         <div class="cursor-pointer text-blue-700">
           <a class=" mr-4">编辑</a>

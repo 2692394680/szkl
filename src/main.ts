@@ -10,6 +10,7 @@ import TDesign from 'tdesign-vue-next'
 
 import 'tdesign-vue-next/es/style/index.css'
 import '@/styles/variable.less'
+import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 
 const app = createApp(App)
 
