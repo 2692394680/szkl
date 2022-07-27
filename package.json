@@ -15,7 +15,8 @@
     "tdesign-vue-next": "^0.18",
     "vue": "^3.2.25",
     "vue-router": "^4.0.13",
-    "vue3-draggable-resizable": "^1.6.4"
+    "vue3-draggable-resizable": "^1.6.4",
+    "vue3-menus": "^1.1.2"
   },
   "devDependencies": {
     "@types/node": "^18.0.6",

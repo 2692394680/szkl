@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue'
 import { ELEMENT_LIBRARY } from '@/views/configuration/constants/design_constants'
-import { ref, defineComponent, watch, onMounted, onBeforeMount } from 'vue'
+import { ref, defineComponent, watch, onMounted, onBeforeMount, shallowRef } from 'vue'
 import Vue3DraggableResizable, { DraggableContainer } from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
+import { menusEvent } from 'vue3-menus'
 import lodash from 'lodash'
 
 defineComponent({
@@ -20,22 +21,42 @@ const canvasList = ref<any>([])
 const canvasTheIndex = ref(0)
 // 画布中添加组件时，组件的层级
 const canvasZIndex = ref(1)
+
 // 剪切板数据
 const copyList = ref<any>([])
 // 画布中被选中组件数据
 const selectedList = ref<number[]>([])
+
 // 是否正在移动
 const isMove = ref(false)
 const prevOffsetX = ref(0)
 const prevOffsetY = ref(0)
-const defaultX = ref<any>([])
-const defaultY = ref<any>([])
 // 历史记录
 const historyList = ref<any>([])
 // 历史记录最大存储数
 const historyMaxStep = ref(25)
 // 历史记录数据当前下标
 const historyTheIndex = ref(0)
+// 右键菜单数据
+const menuList = shallowRef({
+  menus: [{
+    label: '复制',
+    tip: 'Ctrl+C',
+    click: () => copyHandle()
+  }, {
+    label: '粘贴',
+    tip: 'Ctrl+V',
+    disabled: true,
+    click: (menu, event) => {
+      copyList.value.forEach(item => {
+        item.id = Date.parse(Date())
+        item.x = event.x - 360
+        item.y = event.y - 68
+      })
+      canvasList.value.push.apply(canvasList.value, lodash.cloneDeep(copyList.value))
+    }
+  }]
+})
 
 function elementDragStartHandle(e: any, item: object) {
   e.dataTransfer.setData('type', JSON.stringify(item))
@@ -72,19 +93,19 @@ function dragStartHandle() {
 
 // 画布组件拖动中
 function draggingHandle(data: any) {
-  if (selectedList.value.length === 0) return
-  if (isMove.value) {
-    selectedList.value.forEach((item) => {
-      defaultX.value[item] = lodash.cloneDeep(canvasList.value[item].x)
-      defaultY.value[item] = lodash.cloneDeep(canvasList.value[item].y)
-    })
-    isMove.value = false
-  } else {
-    selectedList.value.forEach((item) => {
-      canvasList.value[item].x = data.x - prevOffsetX.value + defaultX[item]
-      canvasList.value[item].y = data.y - prevOffsetY.value + defaultY[item]
-    })
-  }
+  // if (selectedList.value.length === 0) return
+  // if (isMove.value) {
+  //   selectedList.value.forEach((item) => {
+  //     defaultX.value[item] = lodash.cloneDeep(canvasList.value[item].x)
+  //     defaultY.value[item] = lodash.cloneDeep(canvasList.value[item].y)
+  //   })
+  //   isMove.value = false
+  // } else {
+  //   selectedList.value.forEach((item) => {
+  //     canvasList.value[item].x = data.x - prevOffsetX.value + defaultX[item]
+  //     canvasList.value[item].y = data.y - prevOffsetY.value + defaultY[item]
+  //   })
+  // }
 }
 
 // 画布组件拖动结束
@@ -102,7 +123,6 @@ function onResizeStop({
   w,
   h
 }) {
-  console.log(x, y, w, h)
   canvasList.value[canvasTheIndex.value].x = x
   canvasList.value[canvasTheIndex.value].y = y
   canvasList.value[canvasTheIndex.value].width = w
@@ -150,6 +170,18 @@ function onKeyDown(e: any) {
   //   this.list.splice(this.theIndex, 1)
   //   this.theIndex = 0
   // }
+}
+
+// 复制
+function copyHandle() {
+  copyList.value = [lodash.cloneDeep(canvasList.value[canvasTheIndex.value])]
+  // 启用右键菜单粘贴选项
+  menuList.value.menus[1].disabled = false
+}
+// 右键菜单
+function rightClick(event:MouseEvent) {
+  menusEvent(event, menuList.value, event)
+  event.preventDefault()
 }
 
 // 添加历史记录数据
@@ -230,7 +262,8 @@ watch(
         </t-menu>
       </t-aside>
       <t-content>
-        <div class="canvas" @drop="onDropHandle" @dragover.prevent>
+        <div class="canvas" @drop="onDropHandle" @dragover.prevent
+             @contextmenu="rightClick">
           <DraggableContainer :referenceLineColor="'#cccccc'">
             <Vue3DraggableResizable
                 v-for="(item, index) in canvasList"
@@ -245,6 +278,7 @@ watch(
                 @dragging="draggingHandle"
                 @drag-end="dragEndHandle"
                 @resize-end="onResizeStop"
+                @click.right="canvasTheIndex = index"
             >
               <t-input class="textBox" type="text" v-model="item.value"></t-input>
             </Vue3DraggableResizable>
