@@ -16,17 +16,18 @@ defineComponent({
 
 const elementExpanded = ref([0, 1])
 // 画布数据
-const canvasList = ref<any>([])
+const canvasList = ref<any>([{}])
 // 当前选中组件在画布数据中的下标
 const canvasTheIndex = ref(0)
 // 画布中添加组件时，组件的层级
-const canvasZIndex = ref(1)
+const canvasZIndex = ref(2)
+// 属性栏切换
+const rightTabsValue = ref('1')
 
 // 剪切板数据
 const copyList = ref<any>([])
 // 画布中被选中组件数据
 const selectedList = ref<number[]>([])
-
 // 是否正在移动
 const isMove = ref(false)
 const prevOffsetX = ref(0)
@@ -178,12 +179,12 @@ function copyHandle() {
   // 启用右键菜单粘贴选项
   menuList.value.menus[1].disabled = false
 }
+
 // 右键菜单
-function rightClick(event:MouseEvent) {
+function rightClick(event: MouseEvent) {
   menusEvent(event, menuList.value, event)
   event.preventDefault()
 }
-
 // 添加历史记录数据
 function pushRecord(data: any) {
   // 判断传入记录是否和当前记录相同
@@ -262,8 +263,10 @@ watch(
         </t-menu>
       </t-aside>
       <t-content>
+        <!--画布-->
         <div class="canvas" @drop="onDropHandle" @dragover.prevent
              @contextmenu="rightClick">
+<!--          <div class="close-canvas" @click="checkClose" @click.right="checkClose"></div>-->
           <DraggableContainer :referenceLineColor="'#cccccc'">
             <Vue3DraggableResizable
                 v-for="(item, index) in canvasList"
@@ -278,14 +281,67 @@ watch(
                 @dragging="draggingHandle"
                 @drag-end="dragEndHandle"
                 @resize-end="onResizeStop"
-                @click.right="canvasTheIndex = index"
+                @click.right="canvasTheIndex=index"
             >
-              <t-input class="textBox" type="text" v-model="item.value"></t-input>
+              <!--文本框-->
+              <input class="textBox" type="text" v-model="item.value"
+                     v-if="item.type==='textBox'"/>
+              <!--矩形-->
+              <div class="rectangle item" v-if="item.type==='rectangle'"
+                   :style="'background-color:'+item.color"></div>
+              <!--圆形-->
+              <div class="round item" v-if="item.type==='round'"
+                   :style="'background-color:'+item.color"></div>
             </Vue3DraggableResizable>
           </DraggableContainer>
         </div>
       </t-content>
-      <t-aside></t-aside>
+      <t-aside width="20%">
+        <div class="design-right" v-show="canvasTheIndex===0">
+          <t-tabs v-model="rightTabsValue">
+            <!-- 默认插槽 和 具名插槽（panel）都是用来渲染面板内容 -->
+            <t-tab-panel value="1" label="页面设置" :destroyOnHide="false">
+              <p style="padding: 25px;">页面设置</p>
+            </t-tab-panel>
+          </t-tabs>
+        </div>
+        <div class="design-right" v-show="canvasTheIndex!==0">
+          <t-tabs v-model="rightTabsValue">
+            <t-tab-panel value="1" label="样式" :destroyOnHide="false">
+              <!--位置和尺寸-->
+              <div class="box">
+                <t-row :gutter="25">
+                  <t-col :span="6">
+                    <t-input label="X：" class="item-input" v-model="canvasList[canvasTheIndex].x" theme="normal"
+                    ></t-input>
+                  </t-col>
+                  <t-col :span="6">
+                    <t-input label="Y：" class="item-input" v-model="canvasList[canvasTheIndex].y"
+                             theme="normal"></t-input>
+                  </t-col>
+                  <t-col :span="6">
+                    <t-input label="W：" class="item-input" v-model="canvasList[canvasTheIndex].width"
+                             theme="normal"></t-input>
+                  </t-col>
+                  <t-col :span="6">
+                    <t-input label="H：" class="item-input" v-model="canvasList[canvasTheIndex].height"
+                             theme="normal"></t-input>
+                  </t-col>
+                  <t-col :span="6">
+                    <t-input label="R：" class="item-input" v-model="canvasList[canvasTheIndex].rotation"
+                             theme="normal"></t-input>
+                  </t-col>
+                </t-row>
+              </div>
+            </t-tab-panel>
+            <t-tab-panel value="2" label="属性" :destroyOnHide="false">
+              <div class="box">
+                <t-input label="标题：" v-model="canvasList[canvasTheIndex].title"></t-input>
+              </div>
+            </t-tab-panel>
+          </t-tabs>
+        </div>
+      </t-aside>
     </t-layout>
   </t-layout>
 </template>
@@ -314,6 +370,15 @@ watch(
   }
 }
 
+.close-canvas {
+  background-color: red;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+}
+
 .canvas {
   background-color: #eeeeee;
   height: calc(100vh - 64px);
@@ -335,15 +400,10 @@ watch(
   }
 
   .textBox {
-    padding: 3px 4px;
-    z-index: -1;
-  }
-
-  .click {
     width: 100%;
     height: 100%;
-    position: absolute;
-    top: 0;
+    padding: 0 5px;
+    //z-index: -1;
   }
 
   //组件库
@@ -358,6 +418,49 @@ watch(
 
   .round {
     border-radius: 999px;
+  }
+}
+
+//属性栏
+.design-right {
+  padding: 10px 15px;
+  z-index: 900;
+
+  .box {
+    padding: 10px 5px;
+    border-bottom: 1px solid #eeeeee;
+    color: #8292AC;
+
+    .title {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #545454;
+    }
+
+    .item-input {
+      margin: 6px 0;
+    }
+
+    .item-data {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      text-align: left;
+
+      .name {
+        //width: 100px;
+      }
+
+      .icon {
+        cursor: pointer;
+      }
+    }
+
+    .item-color {
+      margin: 15px 5px;
+      padding: 5px;
+      border: 1px solid #c0c0c0;
+    }
   }
 }
 </style>

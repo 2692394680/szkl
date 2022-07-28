@@ -6,7 +6,7 @@ export const ELEMENT_LIBRARY = [
       type: 'textBox',
       handles: ['mr', 'ml'],
       width: 200,
-      height: 40
+      height: 34
     }, {
       title: '矩形',
       type: 'rectangle',
