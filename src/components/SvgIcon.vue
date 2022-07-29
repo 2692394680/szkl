@@ -44,8 +44,11 @@ export default {
 
 <style scoped lang="less">
 .svg-icon {
-  position: relative;
-  fill: currentColor;
-  vertical-align: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //position: relative;
+  //fill: currentColor;
+  //vertical-align: -2px;
 }
 </style>

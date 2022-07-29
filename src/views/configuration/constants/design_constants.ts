@@ -30,9 +30,10 @@ export const ELEMENT_LIBRARY = [
     list: [{
       title: '开关',
       type: 'switch',
-      h: 40,
+      h: 29,
       w: 50,
-      resizable: false
+      resizable: false,
+      lockAspectRatio: true
     }, {
       title: '按钮',
       type: 'button',

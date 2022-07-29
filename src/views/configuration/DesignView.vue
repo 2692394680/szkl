@@ -8,6 +8,7 @@ import { menusEvent } from 'vue3-menus'
 import lodash from 'lodash'
 import { storeToRefs } from 'pinia'
 import { getConfigurationStore } from '@/store/modules/configuration_store'
+import SvgIcon from '@/components/SvgIcon.vue'
 
 defineComponent({
   components: {
@@ -274,6 +275,7 @@ watch(
                 :w="item.w"
                 :h="item.h"
                 :handles="item.handles"
+                :lockAspectRatio="item.lockAspectRatio"
                 @activated="canvasTheIndex=index"
                 @drag-start="dragStartHandle"
                 @dragging="draggingHandle"
@@ -284,14 +286,19 @@ watch(
               <!--文本框-->
               <input class="textBox" type="text" v-model="item.value"
                      v-if="item.type==='textBox'"
-                     :style="`color:${item.color};background-color:${item.bgColor};border-radius:${item.radius}`"/>
+                     :style="`color:${item.color};background-color:${item.bgColor};border-radius:${item.radius}px`"/>
               <!--矩形-->
               <div class="rectangle item" v-if="item.type==='rectangle'"
-                   :style="`background-color:${item.bgColor};border-radius:${item.radius}`"></div>
+                   :style="`background-color:${item.bgColor};border-radius:${item.radius}px`"></div>
               <!--圆形-->
               <div class="round item" v-if="item.type==='round'"
                    :style="`background-color:${item.bgColor};`"></div>
-              <div></div>
+              <div class="justify-center items-center" v-if="item.type==='switch'" :style="`width:${item.w}px;height:${item.h}px`">
+                <SvgIcon icon-name="switch-on" :size="'100%'"></SvgIcon>
+              </div>
+              <div v-if="item.type==='button'">
+                <t-button size="large" block>{{item.value}}</t-button>
+              </div>
             </Vue3DraggableResizable>
           </DraggableContainer>
         </div>
@@ -334,7 +341,7 @@ watch(
                   </t-col>
                   <t-col :span="6">
                     <t-input label="圆角：" class="item-input" v-model="canvasList[canvasTheIndex].radius"
-                             theme="normal" v-if="canvasList[canvasTheIndex].radius"></t-input>
+                             theme="normal" v-if="canvasList[canvasTheIndex].radius!==undefined"></t-input>
                   </t-col>
                 </t-row>
               </div>
@@ -350,6 +357,9 @@ watch(
             <t-tab-panel value="2" label="属性" :destroyOnHide="false">
               <div class="box">
                 <t-input label="名称：" v-model="canvasList[canvasTheIndex].title" ></t-input>
+              </div>
+              <div class="box">
+                <t-input label="值：" v-model="canvasList[canvasTheIndex].value" ></t-input>
               </div>
             </t-tab-panel>
           </t-tabs>
