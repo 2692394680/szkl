@@ -5,17 +5,22 @@ export const ELEMENT_LIBRARY = [
       title: '文本框',
       type: 'textBox',
       handles: ['mr', 'ml'],
-      width: 200,
-      height: 34
+      w: 200,
+      h: 34,
+      textColor: '#000000',
+      bgColor: '#ffffff',
+      radius: 0
     }, {
       title: '矩形',
       type: 'rectangle',
-      color: '#ffc0c0'
+      bgColor: '#45869D',
+      radius: 0
     }, {
       title: '圆形',
       type: 'round',
-      color: '#ffc0c0',
-      lockAspectRatio: true
+      bgColor: '#45869D',
+      lockAspectRatio: true,
+      radius: 0
     }, {
       title: '表格',
       type: 'table'
@@ -25,16 +30,16 @@ export const ELEMENT_LIBRARY = [
     list: [{
       title: '开关',
       type: 'switch',
-      height: 40,
-      width: 50,
+      h: 40,
+      w: 50,
       resizable: false
     }, {
       title: '按钮',
       type: 'button',
       handles: ['mr', 'ml'],
       value: '按钮',
-      width: 100,
-      height: 40
+      w: 100,
+      h: 40
     }]
   }
 ]

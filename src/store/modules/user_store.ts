@@ -4,12 +4,11 @@ import { TOKEN_NAME, USERINFO_NAME } from '@/config/global'
 import { MessagePlugin } from 'tdesign-vue-next'
 import router from '@/router/index_router'
 import { login, userinfoGet } from '@/api/user_api'
-import { reactive } from 'vue'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem(TOKEN_NAME) || 'main_token',
-    userinfo: reactive<any>(JSON.parse(sessionStorage.getItem(USERINFO_NAME) || '{}'))
+    userinfo: JSON.parse(sessionStorage.getItem(USERINFO_NAME) || '{}')
   }),
   actions: {
     async getUserInfo() {
@@ -25,7 +24,7 @@ export const useUserStore = defineStore('user', {
       await router.push('/loginRegister/login')
     },
     async login(event, data) {
-      if (!event.validateResult) return
+      if (typeof event.validateResult === 'object') return
       const result: any = await login(data)
       this.userinfo = result ? result.value : {}
       this.token = result ? result.msg.substring(8, result.msg.length) : ''

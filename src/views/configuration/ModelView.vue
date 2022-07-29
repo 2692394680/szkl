@@ -1,63 +1,68 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { modelListGet } from '@/api/configuration_api'
+import { ConfigurationApi } from '@/api/configuration_api'
+import { useRouter } from 'vue-router'
+import { TABLE_COLUMNS } from '@/views/configuration/constants/model_constants'
+import { getDeviceStore } from '@/store/modules/device_store'
+import { storeToRefs } from 'pinia'
 
-const tableColumns = ref([
-  {
-    colKey: 'moduleId',
-    title: '组态ID',
-    // 对齐方式
-    align: 'center',
-    // 设置列类名
-    className: 'custom-column-class-name',
-    // 设置列属性
-    attrs: {
-      'data-id': 'first-column'
-    }
-  },
-  {
-    colKey: 'moduleName',
-    title: '组态名称'
-  }, {
-    colKey: 'modulePath',
-    title: '组态路径'
-  }, {
-    colKey: 'deviceId',
-    title: '设备ID'
-  }, {
-    colKey: 'deviceMac',
-    title: '设备MAC'
-  },
-  {
-    colKey: 'userId',
-    title: '创建人'
-  },
-  {
-    colKey: 'createTime',
-    title: '创建时间'
-  },
-  {
-    colKey: 'op',
-    title: '操作',
-    /**
-     * 1.内容超出时，是否显示省略号。值为 true，则浮层默认显示单元格内容；
-     * 2.值类型为 Function 则自定义浮层显示内容；
-     * 3.值类型为 Object，则自动透传属性到 Popup 组件。
-     */
-    ellipsis: true
-  }
-])
+const router = useRouter()
+const configurationApi = new ConfigurationApi()
+const { deviceList } = storeToRefs(getDeviceStore())
 const tableData = ref([])
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
   total: 0
 })
+// 新建组态弹窗
+const addModelVisible = ref(false)
+// 新增组态表单数据
+const addModelForm = reactive({
+  deviceId: 0,
+  deviceName: '',
+  modelName: ''
+})
+// 新增组态表单验证
+const addModelRules = {
+  modelName: [{
+    required: true,
+    message: '组态模型名称不能为空',
+    type: 'error'
+  }],
+  deviceId: [{
+    validator: (val) => val !== 0,
+    message: '联网设备不能为空',
+    type: 'error'
+  }]
+}
 
+// 获取模型组态列表
 const getModuleList = async() => {
-  const result: any = await modelListGet(tablePagination.defaultCurrent, tablePagination.defaultPageSize)
+  const result: any = await configurationApi.getList(tablePagination.defaultCurrent, tablePagination.defaultPageSize)
   tableData.value = result ? result.value.modules : []
   tablePagination.total = tableData.value.length
+}
+
+// 添加模型组态
+const addModel = async(event) => {
+  // if (typeof event.validateResult === 'object') return
+  // const file = new File([JSON.stringify([{}])], 'test.json', {
+  //   type: 'application/json',
+  //   lastModified: Date.now()
+  // })
+  // const formData = new FormData()
+  // formData.append('module', file)
+  // formData.append('modelName', addModelForm.modelName)
+  // const result: any = await configurationApi.add(addModelForm.deviceId, formData)
+  // if (result) await router.push('Design')
+  await router.push('Design')
+}
+
+// 打开新增组态对话框
+function openModelDialog() {
+  addModelVisible.value = true
+  getDeviceStore().getDeviceList(1, 8)
 }
 
 onMounted(() => {
@@ -70,11 +75,34 @@ onMounted(() => {
     <div class="flex justify-between mb-4">
       <div></div>
       <div>
-        <t-button @click="$router.push('/configuration/design')">新增组态</t-button>
+        <t-button @click="openModelDialog">新增组态</t-button>
       </div>
     </div>
 
-    <t-table row-key="moduleId" :data="tableData" :columns="tableColumns" stripe bordered hover
+    <t-dialog v-model:visible="addModelVisible" :footer="false">
+      <t-form :data="addModelForm" :rules="addModelRules" @submit="addModel">
+        <t-form-item labelWidth="0">
+          <div class="text-2xl">添加组态</div>
+        </t-form-item>
+        <t-form-item name="modelName" label="组态名称">
+          <t-input v-model="addModelForm.modelName"></t-input>
+        </t-form-item>
+        <t-form-item name="deviceId" label="绑定设备">
+          <t-select placeholder="请选择联网设备" @change="addModelForm.deviceId=$event">
+            <t-option v-for="(item,index) in deviceList" :key="index" :label="item.deviceName"
+                      :value="item.deviceId"></t-option>
+          </t-select>
+        </t-form-item>
+        <t-form-item>
+          <div class="flex justify-end w-full">
+            <t-button class="mr-2" theme="default" @click="addModelVisible=false">取消</t-button>
+            <t-button type="submit">添加</t-button>
+          </div>
+        </t-form-item>
+      </t-form>
+    </t-dialog>
+
+    <t-table row-key="moduleId" :data="tableData" :columns="TABLE_COLUMNS" stripe bordered hover
              table-layout="fixed"
              :pagination="tablePagination">
       <template #op>

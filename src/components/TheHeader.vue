@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { getUserStore } from '@/store/modules/user_store'
+import { getConfigurationStore } from '@/store/modules/configuration_store'
 import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 
 const {
   token,
   userinfo
-} = getUserStore()
-const userStore = getUserStore()
+} = storeToRefs(getUserStore())
 onMounted(() => {
-  if (!userinfo.value && token !== 'main_token') {
-    userStore.getUserInfo()
+  if (token.value !== 'main_token') {
+    getUserStore().getUserInfo()
   }
 })
 </script>
@@ -22,7 +23,10 @@ export default {
 <template>
   <div class="header-box">
     <t-head-menu theme="dark" height="120px">
-      <p class="text-3xl text-white cursor-pointer" @click="$router.push('/')">SZKelian</p>
+      <p class="text-3xl text-white cursor-pointer mr-4" @click="$router.push('/')">SZKelian</p>
+      <div v-if="$route.name==='Design'" class="text-gray-400">
+        <p class="cursor-pointer mr-8" @click="getConfigurationStore().saveDesignData()">保存</p>
+      </div>
 
       <template #operations>
         <div v-if="token==='main_token'">
@@ -37,11 +41,11 @@ export default {
               <t-dropdown-menu>
                 <t-dropdown-item>个人信息</t-dropdown-item>
                 <t-dropdown-item>修改密码</t-dropdown-item>
-                <t-dropdown-item @click="userStore.logout()">退出登录</t-dropdown-item>
+                <t-dropdown-item @click="getUserStore().logout()">退出登录</t-dropdown-item>
               </t-dropdown-menu>
             </template>
           </t-dropdown>
-          <span class="cursor-pointer mr-8" @click="$router.push('controller')">控制台</span>
+          <span class="cursor-pointer mr-8" @click="$router.push('/configuration')">控制台</span>
         </div>
       </template>
     </t-head-menu>

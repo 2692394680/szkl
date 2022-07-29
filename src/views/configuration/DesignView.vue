@@ -6,6 +6,8 @@ import Vue3DraggableResizable, { DraggableContainer } from 'vue3-draggable-resiz
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import { menusEvent } from 'vue3-menus'
 import lodash from 'lodash'
+import { storeToRefs } from 'pinia'
+import { getConfigurationStore } from '@/store/modules/configuration_store'
 
 defineComponent({
   components: {
@@ -16,7 +18,7 @@ defineComponent({
 
 const elementExpanded = ref([0, 1])
 // 画布数据
-const canvasList = ref<any>([{}])
+const { canvasList } = storeToRefs(getConfigurationStore())
 // 当前选中组件在画布数据中的下标
 const canvasTheIndex = ref(0)
 // 画布中添加组件时，组件的层级
@@ -30,8 +32,6 @@ const copyList = ref<any>([])
 const selectedList = ref<number[]>([])
 // 是否正在移动
 const isMove = ref(false)
-const prevOffsetX = ref(0)
-const prevOffsetY = ref(0)
 // 历史记录
 const historyList = ref<any>([])
 // 历史记录最大存储数
@@ -74,8 +74,8 @@ function onDropHandle(e) {
     y: parseInt(e.offsetY),
     x: parseInt(e.offsetX),
     z: canvasZIndex.value,
-    width: 200,
-    height: 200,
+    w: 200,
+    h: 200,
     rotation: 0,
     informationList: [],
     ...JSON.parse(e.dataTransfer.getData('type'))
@@ -86,8 +86,8 @@ function onDropHandle(e) {
 // 画布组件开始拖动时
 function dragStartHandle() {
   console.log('start')
-  prevOffsetX.value = canvasList.value[canvasTheIndex.value].x
-  prevOffsetY.value = canvasList.value[canvasTheIndex.value].y
+  // prevOffsetX.value = canvasList.value[canvasTheIndex.value].x
+  // prevOffsetY.value = canvasList.value[canvasTheIndex.value].y
   if (selectedList.value.length === 0) return
   isMove.value = true
 }
@@ -110,24 +110,21 @@ function draggingHandle(data: any) {
 }
 
 // 画布组件拖动结束
-function dragEndHandle(data: any) {
-  canvasList.value[canvasTheIndex.value].x = data.x
-  canvasList.value[canvasTheIndex.value].y = data.y
-  prevOffsetX.value = 0
-  prevOffsetY.value = 0
+function dragEndHandle(data: object) {
+  Object.assign(canvasList.value[canvasTheIndex.value], data)
+  // canvasList.value[canvasTheIndex.value].x = data.x
+  // canvasList.value[canvasTheIndex.value].y = data.y
+  // prevOffsetX.value = 0
+  // prevOffsetY.value = 0
 }
 
 // 组件调整大小后
-function onResizeStop({
-  x,
-  y,
-  w,
-  h
-}) {
-  canvasList.value[canvasTheIndex.value].x = x
-  canvasList.value[canvasTheIndex.value].y = y
-  canvasList.value[canvasTheIndex.value].width = w
-  canvasList.value[canvasTheIndex.value].height = h
+function onResizeStop(data: object) {
+  Object.assign(canvasList.value[canvasTheIndex.value], data)
+  // canvasList.value[canvasTheIndex.value].x = x
+  // canvasList.value[canvasTheIndex.value].y = y
+  // canvasList.value[canvasTheIndex.value].w = w
+  // canvasList.value[canvasTheIndex.value].h = h
 }
 
 function onKeyDown(e: any) {
@@ -185,6 +182,7 @@ function rightClick(event: MouseEvent) {
   menusEvent(event, menuList.value, event)
   event.preventDefault()
 }
+
 // 添加历史记录数据
 function pushRecord(data: any) {
   // 判断传入记录是否和当前记录相同
@@ -266,15 +264,15 @@ watch(
         <!--画布-->
         <div class="canvas" @drop="onDropHandle" @dragover.prevent
              @contextmenu="rightClick">
-<!--          <div class="close-canvas" @click="checkClose" @click.right="checkClose"></div>-->
+          <!--          <div class="close-canvas" @click="checkClose" @click.right="checkClose"></div>-->
           <DraggableContainer :referenceLineColor="'#cccccc'">
             <Vue3DraggableResizable
                 v-for="(item, index) in canvasList"
                 :key="index"
                 :x="item.x"
                 :y="item.y"
-                :w="item.width"
-                :h="item.height"
+                :w="item.w"
+                :h="item.h"
                 :handles="item.handles"
                 @activated="canvasTheIndex=index"
                 @drag-start="dragStartHandle"
@@ -285,13 +283,15 @@ watch(
             >
               <!--文本框-->
               <input class="textBox" type="text" v-model="item.value"
-                     v-if="item.type==='textBox'"/>
+                     v-if="item.type==='textBox'"
+                     :style="`color:${item.color};background-color:${item.bgColor};border-radius:${item.radius}`"/>
               <!--矩形-->
               <div class="rectangle item" v-if="item.type==='rectangle'"
-                   :style="'background-color:'+item.color"></div>
+                   :style="`background-color:${item.bgColor};border-radius:${item.radius}`"></div>
               <!--圆形-->
               <div class="round item" v-if="item.type==='round'"
-                   :style="'background-color:'+item.color"></div>
+                   :style="`background-color:${item.bgColor};`"></div>
+              <div></div>
             </Vue3DraggableResizable>
           </DraggableContainer>
         </div>
@@ -312,7 +312,8 @@ watch(
               <div class="box">
                 <t-row :gutter="25">
                   <t-col :span="6">
-                    <t-input label="X：" class="item-input" v-model="canvasList[canvasTheIndex].x" theme="normal"
+                    <t-input label="X：" class="item-input" v-model="canvasList[canvasTheIndex].x"
+                             theme="normal"
                     ></t-input>
                   </t-col>
                   <t-col :span="6">
@@ -320,23 +321,35 @@ watch(
                              theme="normal"></t-input>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="W：" class="item-input" v-model="canvasList[canvasTheIndex].width"
+                    <t-input label="W：" class="item-input" v-model="canvasList[canvasTheIndex].w"
                              theme="normal"></t-input>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="H：" class="item-input" v-model="canvasList[canvasTheIndex].height"
+                    <t-input label="H：" class="item-input" v-model="canvasList[canvasTheIndex].h"
                              theme="normal"></t-input>
                   </t-col>
                   <t-col :span="6">
                     <t-input label="R：" class="item-input" v-model="canvasList[canvasTheIndex].rotation"
                              theme="normal"></t-input>
                   </t-col>
+                  <t-col :span="6">
+                    <t-input label="圆角：" class="item-input" v-model="canvasList[canvasTheIndex].radius"
+                             theme="normal" v-if="canvasList[canvasTheIndex].radius"></t-input>
+                  </t-col>
                 </t-row>
+              </div>
+              <div class="box" v-if="canvasList[canvasTheIndex].textColor">
+                <p class="mb-3">文字颜色</p>
+                <t-color-picker v-model="canvasList[canvasTheIndex].textColor" format="HEX" :color-modes="['monochrome']"></t-color-picker>
+              </div>
+              <div class="box" v-if="canvasList[canvasTheIndex].bgColor">
+                <p class="mb-3">背景颜色</p>
+                <t-color-picker v-model="canvasList[canvasTheIndex].bgColor" format="HEX" :color-modes="['monochrome']"></t-color-picker>
               </div>
             </t-tab-panel>
             <t-tab-panel value="2" label="属性" :destroyOnHide="false">
               <div class="box">
-                <t-input label="标题：" v-model="canvasList[canvasTheIndex].title"></t-input>
+                <t-input label="名称：" v-model="canvasList[canvasTheIndex].title" ></t-input>
               </div>
             </t-tab-panel>
           </t-tabs>
