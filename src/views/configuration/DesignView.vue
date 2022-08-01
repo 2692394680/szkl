@@ -276,6 +276,7 @@ watch(
                 :h="item.h"
                 :handles="item.handles"
                 :lockAspectRatio="item.lockAspectRatio"
+                :parent="true"
                 @activated="canvasTheIndex=index"
                 @drag-start="dragStartHandle"
                 @dragging="draggingHandle"
@@ -294,7 +295,7 @@ watch(
               <div class="round item" v-if="item.type==='round'"
                    :style="`background-color:${item.bgColor};`"></div>
               <div class="justify-center items-center" v-if="item.type==='switch'" :style="`width:${item.w}px;height:${item.h}px`">
-                <SvgIcon icon-name="switch-on" :size="'100%'"></SvgIcon>
+                <SvgIcon :icon-name="item.value?'switch-on':'switch-off'" :size="'100%'"></SvgIcon>
               </div>
               <div v-if="item.type==='button'">
                 <t-button size="large" block>{{item.value}}</t-button>
@@ -359,7 +360,11 @@ watch(
                 <t-input label="名称：" v-model="canvasList[canvasTheIndex].title" ></t-input>
               </div>
               <div class="box">
-                <t-input label="值：" v-model="canvasList[canvasTheIndex].value" ></t-input>
+                <t-input label="值：" v-model="canvasList[canvasTheIndex].value" v-if="canvasList[canvasTheIndex].type==='textbox'"></t-input>
+                <t-row>
+                  <span>开关状态：</span>
+                  <t-switch v-model="canvasList[canvasTheIndex].value" v-if="canvasList[canvasTheIndex].type==='switch'"></t-switch>
+                </t-row>
               </div>
             </t-tab-panel>
           </t-tabs>

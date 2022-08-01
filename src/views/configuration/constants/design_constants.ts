@@ -4,6 +4,7 @@ export const ELEMENT_LIBRARY = [
     list: [{
       title: '文本框',
       type: 'textBox',
+      value: '文本框',
       handles: ['mr', 'ml'],
       w: 200,
       h: 34,
@@ -30,6 +31,7 @@ export const ELEMENT_LIBRARY = [
     list: [{
       title: '开关',
       type: 'switch',
+      value: true,
       h: 29,
       w: 50,
       resizable: false,
@@ -37,8 +39,8 @@ export const ELEMENT_LIBRARY = [
     }, {
       title: '按钮',
       type: 'button',
-      handles: ['mr', 'ml'],
       value: '按钮',
+      handles: ['mr', 'ml'],
       w: 100,
       h: 40
     }]
