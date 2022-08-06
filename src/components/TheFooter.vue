@@ -7,7 +7,6 @@
       <img src="https://szkelian.oss-cn-hangzhou.aliyuncs.com/2429921892/%E5%A4%87%E6%A1%88/beian.png">
       <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43052402000208"
          style="display:inline-block;text-decoration:none;height:20px;line-height:20px;" rel="noopener">
-        <img src="" style="float:left;">
         <b style="color:white; margin-left: 10px;"> 湘公网安备43052402000208号</b>
       </a>
       <span style="margin:0 10px">|</span>
