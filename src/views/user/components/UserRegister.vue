@@ -17,7 +17,7 @@ const registerForm = reactive({
   passwordRepeat: ''
 })
 
-const registerRules = reactive({
+const registerRules = {
   name: [{
     required: true,
     message: '用户名不能为空',
@@ -42,6 +42,13 @@ const registerRules = reactive({
     required: true,
     message: '密码不能为空',
     type: 'error'
+  }, {
+    validator: (val) => {
+      const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.])[A-Za-z\d$@$!%*?&.]{8,}$/
+      return reg.test(val)
+    },
+    message: '密码必须由大小写字母和特殊字符组成',
+    type: 'error'
   }],
   passwordRepeat: [{
     required: true,
@@ -52,7 +59,7 @@ const registerRules = reactive({
     message: '两次密码不相同',
     type: 'error'
   }]
-})
+}
 </script>
 
 <template>

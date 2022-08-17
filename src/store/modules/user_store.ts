@@ -41,7 +41,7 @@ export const useUserStore = defineStore('user', {
       if (typeof event.validateResult === 'object') return
       await userApi.register(data)
       await MessagePlugin.success('注册成功')
-      await router.push('/loginRegister/register')
+      await router.push('/loginRegister/login')
     },
     // 获取验证码
     async getCode(phone, type) {
