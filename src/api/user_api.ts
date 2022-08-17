@@ -41,11 +41,11 @@ export class UserApi {
     url: '/api/getRoles'
   })
 
-  // 修改密码
-  passwordUpdate = (data, code) => request({
-    method: 'POST',
-    url: '/api/updatePassword/' + code,
-    data
+  // 重置密码
+  passwordReset = (params) => request({
+    method: 'GET',
+    url: '/user/updatePassword/' + params.code,
+    params
   })
 
   // 用户注册验证码

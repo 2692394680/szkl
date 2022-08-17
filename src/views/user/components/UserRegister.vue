@@ -47,7 +47,7 @@ const registerRules = {
       const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.])[A-Za-z\d$@$!%*?&.]{8,}$/
       return reg.test(val)
     },
-    message: '密码必须由大小写字母和特殊字符组成',
+    message: '密码由至少8位大小写字母和特殊字符组成',
     type: 'error'
   }],
   passwordRepeat: [{
@@ -98,7 +98,7 @@ const registerRules = {
       <t-form-item labelWidth="0">
         <div class="flex justify-between w-full cursor-pointer text-gray-500">
           <span @click="$router.push('login')">已有账号？立即登录</span>
-          <span>忘记密码</span>
+          <span @click="$router.push('password')">忘记密码?</span>
         </div>
       </t-form-item>
     </t-form>

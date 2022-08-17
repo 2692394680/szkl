@@ -3,6 +3,7 @@ import SvgIcon from '@/components/SvgIcon.vue'
 
 import UserLogin from '@/views/user/components/UserLogin.vue'
 import UserRegister from '@/views/user/components/UserRegister.vue'
+import UserPasswordReset from '@/views/user/components/UserPasswordReset.vue'
 
 </script>
 
@@ -15,7 +16,8 @@ import UserRegister from '@/views/user/components/UserRegister.vue'
     <div class="left text-5xl cursor-pointer" @click="$router.push('/')">深圳科链工业物联网平台</div>
     <div class="right">
       <UserLogin v-if="$route.params.type==='login'"></UserLogin>
-      <UserRegister v-else></UserRegister>
+      <UserRegister v-if="$route.params.type==='register'"></UserRegister>
+      <UserPasswordReset v-if="$route.params.type==='password'"></UserPasswordReset>
     </div>
   </div>
 </template>

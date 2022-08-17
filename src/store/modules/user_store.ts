@@ -59,6 +59,7 @@ export const useUserStore = defineStore('user', {
           userApi.userinfoUpdateCode({ phone })
           break
         case 'password':
+          userApi.passwordResetCode({ phone })
           break
       }
       const timeStop = setInterval(() => {
