@@ -16,9 +16,10 @@ export class UserApi {
   })
 
   // 获取用户信息
-  userinfoGet = () => request({
+  userinfoGet = (params) => request({
     method: 'GET',
-    url: '/api/getInfo'
+    url: '/user/userInfo',
+    params
   })
 
   // 修改用户信息

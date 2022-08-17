@@ -66,7 +66,7 @@ function openModelDialog() {
 }
 
 onMounted(() => {
-  getModuleList()
+  // getModuleList()
 })
 </script>
 

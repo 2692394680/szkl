@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getUserInfo() {
-      const result: any = await userApi.userinfoGet() || {}
+      const result: any = await userApi.userinfoGet({ id: this.userinfo.id }) || {}
       this.userinfo = result.value
       sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
@@ -31,7 +31,7 @@ export const useUserStore = defineStore('user', {
       if (typeof event.validateResult === 'object') return
       const result: any = await userApi.login(data) || {}
       this.userinfo = result.value
-      this.token = result.msg.substring(8, result.msg.length)
+      this.token = result.msg.substring(9, result.msg.length)
       localStorage.setItem(TOKEN_NAME, this.token)
       sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)
