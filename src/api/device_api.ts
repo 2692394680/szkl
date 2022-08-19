@@ -14,9 +14,10 @@ export class DeviceApi {
   })
 
   // 获取设备列表
-  getList = (index: number, size: number) => request({
+  getList = (params) => request({
     method: 'GET',
-    url: `/api/device/devices/${index}/${size}`
+    url: '/device/getDeviceList',
+    params
   })
 
   // 修改设备信息
