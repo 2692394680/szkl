@@ -4,11 +4,11 @@ import { reactive } from 'vue'
 
 const userStore = getUserStore()
 const loginForm = reactive({
-  phone: '19156574039',
+  username: '19156574039',
   password: 'Luo123456.'
 })
 const loginRules = reactive({
-  phone: [{
+  username: [{
     required: true,
     message: '账号不能为空',
     type: 'error'
@@ -29,7 +29,7 @@ const loginRules = reactive({
     </div>
     <t-form :rules="loginRules" :data="loginForm" @submit="userStore.login($event,loginForm)">
       <t-form-item labelWidth="0" name="username">
-        <t-input placeholder="请输入手机号或邮箱" size="large" v-model="loginForm.phone"></t-input>
+        <t-input placeholder="请输入手机号或邮箱" size="large" v-model="loginForm.username"></t-input>
       </t-form-item>
       <t-form-item labelWidth="0" name="password">
         <t-input placeholder="请输入密码" type="password" size="large" v-model="loginForm.password"></t-input>

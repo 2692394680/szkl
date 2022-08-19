@@ -10,7 +10,7 @@ const userApi = new UserApi()
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem(TOKEN_NAME) || 'main_token',
-    userinfo: JSON.parse(sessionStorage.getItem(USERINFO_NAME) || '{}'),
+    userinfo: JSON.parse(localStorage.getItem(USERINFO_NAME) || '{}'),
     time: 60,
     timeTrue: true
   }),
@@ -18,11 +18,11 @@ export const useUserStore = defineStore('user', {
     async getUserInfo() {
       const result: any = await userApi.userinfoGet({ id: this.userinfo.id }) || {}
       this.userinfo = result.value
-      sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
+      localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
     async logout() {
       localStorage.removeItem(TOKEN_NAME)
-      sessionStorage.removeItem(USERINFO_NAME)
+      localStorage.removeItem(USERINFO_NAME)
       this.token = 'main_token'
       this.userinfo = {}
       await router.push('/loginRegister/login')
@@ -33,7 +33,7 @@ export const useUserStore = defineStore('user', {
       this.userinfo = result.value
       this.token = result.msg.substring(9, result.msg.length)
       localStorage.setItem(TOKEN_NAME, this.token)
-      sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
+      localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)
       await router.push('/configuration')
     },

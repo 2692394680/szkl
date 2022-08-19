@@ -10,7 +10,7 @@ const {
 } = storeToRefs(getUserStore())
 const registerForm = reactive({
   name: '',
-  phone: '',
+  username: '',
   code: '',
   email: '',
   password: '',
@@ -23,7 +23,7 @@ const registerRules = {
     message: '用户名不能为空',
     type: 'error'
   }],
-  phone: [{
+  username: [{
     required: true,
     message: '手机号不能为空',
     type: 'error'
@@ -84,11 +84,11 @@ const registerRules = {
         <t-input placeholder="请输入邮箱" size="large" v-model="registerForm.email"></t-input>
       </t-form-item>
       <t-form-item labelWidth="0" name="phone">
-        <t-input placeholder="请输入手机号" size="large" v-model="registerForm.phone"></t-input>
+        <t-input placeholder="请输入手机号" size="large" v-model="registerForm.username"></t-input>
       </t-form-item>
       <t-form-item labelWidth="0" name="code">
         <t-input class="mr-3" placeholder="请输入验证码" size="large" v-model="registerForm.code"></t-input>
-        <t-button size="large" @click="userStore.getCode(registerForm.phone,'register')"
+        <t-button size="large" @click="userStore.getCode(registerForm.username,'register')"
                   :disabled="!timeTrue">{{ timeTrue ? '获取验证码' : time + '后获取' }}
         </t-button>
       </t-form-item>
