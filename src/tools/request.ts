@@ -23,27 +23,19 @@ request.interceptors.request.use((config: any) => {
  */
 request.interceptors.response.use((res: AxiosResponse) => {
   const userStore = getUserStore()
-
   nprogress.done()
-  switch (res.data.code) {
-    case 500:
-      MessagePlugin.error('服务器繁忙，请稍后再试').then(() => {
-      })
-      return
-    case 403:
+  if (res.data.code !== 200) {
+    if (res.data.msg === '请登录') {
       userStore.logout().then(() => {
       })
-      MessagePlugin.error('登录信息失效，请重新登录').then(() => {
-      })
-      return
-    case 200:
-      return res.data
-    default:
-      MessagePlugin.error(res.data.msg).then(() => {
-      })
+    }
+    MessagePlugin.error(res.data.msg).then(() => {})
+    // eslint-disable-next-line prefer-promise-reject-errors
+    return Promise.reject(res.data.msg)
   }
+  return res.data
 }, (error: object) => {
-  MessagePlugin.error('请求失败，请稍后重试').then(() => {})
+  MessagePlugin.error('服务器繁忙，请稍后重试').then(() => {})
   return Promise.reject(error)
 })
 
