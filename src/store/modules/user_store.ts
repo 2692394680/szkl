@@ -30,8 +30,8 @@ export const useUserStore = defineStore('user', {
     async login(event, data) {
       if (typeof event.validateResult === 'object') return
       const result: any = await userApi.login(data) || {}
-      this.userinfo = result.value
-      this.token = result.msg.substring(9, result.msg.length)
+      this.userinfo = result?.value
+      this.token = result?.msg.substring(9, result.msg.length)
       localStorage.setItem(TOKEN_NAME, this.token)
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)

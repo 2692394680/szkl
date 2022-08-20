@@ -29,7 +29,7 @@ export class DeviceApi {
   // 添加设备
   add = (data: object) => request({
     method: 'POST',
-    url: '/admin/addDevice',
+    url: '/device/addDevice',
     data
   })
 }
