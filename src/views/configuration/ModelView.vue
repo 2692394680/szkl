@@ -36,11 +36,17 @@ const addModelRules = {
     type: 'error'
   }]
 }
+// 黑白名单状态
+const state = ref(0)
 
 // 获取模型组态列表
-const getModuleList = async() => {
-  const result: any = await configurationApi.getList(tablePagination.defaultCurrent, tablePagination.defaultPageSize)
-  tableData.value = result ? result.value.modules : []
+const getList = async() => {
+  const result: any = await configurationApi.getList({
+    dataSize: tablePagination.defaultPageSize,
+    index: tablePagination.defaultCurrent,
+    isDelete: 0
+  })
+  tableData.value = result?.value.records
   tablePagination.total = tableData.value.length
 }
 
@@ -66,16 +72,22 @@ function openModelDialog() {
 }
 
 onMounted(() => {
-  // getModuleList()
+  getList()
 })
 </script>
 
 <template>
   <div>
+
     <div class="flex justify-between mb-4">
-      <div></div>
       <div>
-        <t-button @click="openModelDialog">新增组态</t-button>
+        <t-tabs v-model="state" :default-value="0" @change="getList">
+          <t-tab-panel :value="0" label="白名单"></t-tab-panel>
+          <t-tab-panel :value="1" label="黑名单"></t-tab-panel>
+        </t-tabs>
+      </div>
+      <div>
+        <t-button @click="openModelDialog">添加组态</t-button>
       </div>
     </div>
 

@@ -2,9 +2,10 @@ import request from '@/tools/request'
 
 export class ConfigurationApi {
   // 获取组态模板列表
-  getList = (index: number, size: number) => request({
+  getList = (params) => request({
     method: 'GET',
-    url: `/api/module/getModules/${index}/${size}`
+    url: '/model',
+    params
   })
 
   // 上传组态模板

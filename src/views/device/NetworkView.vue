@@ -38,9 +38,9 @@ const addDeviceRules = {
 // 获取设备列表
 async function getList() {
   const result: any = await deviceApi.getList({
-    current: tablePagination.defaultCurrent,
     dataSize: tablePagination.defaultPageSize,
-    state: state.value
+    index: tablePagination.defaultCurrent,
+    isDelete: state.value
   }) || {}
   tableData.value = result.value?.records
 }
@@ -87,8 +87,10 @@ onMounted(() => {
     </t-table>
 
     <t-dialog v-model:visible="addDeviceVisible" :destroyOnClose="true" :footer="false">
-      <div class="text-2xl h-14">添加设备</div>
       <t-form :data="addDeviceForm" label-align="left" @submit="addDevice" :rules="addDeviceRules">
+        <t-form-item labelWidth="0">
+          <div class="text-2xl">添加设备</div>
+        </t-form-item>
         <t-form-item label="设备名称" name="name">
           <t-input placeholder="请输入设备名称" v-model="addDeviceForm.name"></t-input>
         </t-form-item>

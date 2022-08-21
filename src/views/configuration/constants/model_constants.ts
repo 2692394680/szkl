@@ -1,6 +1,6 @@
 export const TABLE_COLUMNS = [
   {
-    colKey: 'moduleId',
+    colKey: 'id',
     title: '组态ID',
     // 对齐方式
     align: 'center',
@@ -12,22 +12,23 @@ export const TABLE_COLUMNS = [
     }
   },
   {
-    colKey: 'moduleName',
+    colKey: 'name',
     title: '组态名称'
   }, {
-    colKey: 'modulePath',
+    colKey: 'url',
     title: '组态路径'
   }, {
     colKey: 'deviceId',
     title: '设备ID'
-  }, {
-    colKey: 'deviceMac',
-    title: '设备MAC'
   },
-  {
-    colKey: 'userId',
-    title: '创建人'
-  },
+  // {
+  //   colKey: 'deviceMac',
+  //   title: '设备MAC'
+  // },
+  // {
+  //   colKey: 'userId',
+  //   title: '创建人'
+  // },
   {
     colKey: 'createTime',
     title: '创建时间'
