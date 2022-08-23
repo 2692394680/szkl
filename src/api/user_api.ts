@@ -23,10 +23,10 @@ export class UserApi {
   })
 
   // 修改用户信息
-  userinfoUpdate = (data, code) => request({
-    method: 'POST',
-    url: '/api/updateInfo/' + code,
-    data
+  userinfoUpdate = (params) => request({
+    method: 'PUT',
+    url: '/user/userInfo/' + params.code,
+    params
   })
 
   // 获取权限列表
