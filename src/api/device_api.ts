@@ -8,20 +8,20 @@ export class DeviceApi {
   })
 
   // 获取设备信息
-  getInfo = (mac: string) => request({
+  infoGet = (mac: string) => request({
     method: 'GET',
     url: `/api/device/device/${mac}`
   })
 
   // 获取设备列表
-  getList = (params) => request({
+  listGet = (params) => request({
     method: 'GET',
-    url: '/device/getDeviceList',
+    url: '/device',
     params
   })
 
   // 修改设备信息
-  updateInfo = (data: object) => request({
+  infoUpdate = (data: object) => request({
     method: 'POST',
     url: '/api/device/update'
   })
