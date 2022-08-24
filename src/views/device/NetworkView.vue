@@ -3,9 +3,11 @@ import { TABLE_COLUMNS } from '@/views/device/constants/nework_constants'
 import { onMounted, reactive, ref } from 'vue'
 import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'
+import { storeToRefs } from 'pinia'
+import { getDeviceStore } from '@/store/modules/device_store'
 
 const deviceApi = new DeviceApi()
-const tableData = ref([])
+const { deviceList } = storeToRefs(getDeviceStore())
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
@@ -36,13 +38,13 @@ const addDeviceRules = {
 }
 
 // 获取设备列表
-async function getList() {
-  const result: any = await deviceApi.getList({
+function getList() {
+  getDeviceStore().getDeviceList({
     dataSize: tablePagination.defaultPageSize,
     index: tablePagination.defaultCurrent,
     isDelete: state.value
-  }) || {}
-  tableData.value = result.value?.records
+  })
+  tablePagination.total = deviceList.value.length
 }
 
 // 添加设备
@@ -74,7 +76,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <t-table row-key="id" :data="tableData" :columns="TABLE_COLUMNS" stripe bordered hover
+    <t-table row-key="id" :data="deviceList" :columns="TABLE_COLUMNS" stripe bordered hover
              table-layout="fixed"
              :pagination="tablePagination">
       <template #op>
