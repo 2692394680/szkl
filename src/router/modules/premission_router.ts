@@ -19,6 +19,11 @@ export default [{
     }
   ]
 }, {
+  path: '/configuration/design',
+  name: 'Design',
+  component: () => import('@/views/configuration/DesignView.vue'),
+  meta: { title: '组态设计', hidden: true }
+}, {
   path: '/device',
   name: 'Device',
   component: Layout,
@@ -47,8 +52,20 @@ export default [{
     }
   ]
 }, {
-  path: '/configuration/design',
-  name: 'Design',
-  component: () => import('@/views/configuration/DesignView.vue'),
-  meta: { title: '组态设计' }
+  path: '/user',
+  name: 'User',
+  component: Layout,
+  meta: {
+    title: '个人中心',
+    hidden: true
+  },
+  redirect: '/user/center',
+  children: [
+    {
+      path: 'center',
+      name: 'UserCenter',
+      component: () => import('@/views/user/UserCenterView.vue'),
+      meta: { title: '个人信息' }
+    }
+  ]
 }]
