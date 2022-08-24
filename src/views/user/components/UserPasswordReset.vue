@@ -54,12 +54,13 @@ async function passwordReset(event) {
   await MessagePlugin.success('重置密码成功，请登录')
   await router.push('/loginRegister/login')
 }
+
 </script>
 
 <template>
   <div>
-    <div class="mb-6">
-      <span class="text-2xl mr-2">找回密码</span>
+    <div class="mb-6" v-if="$route.path==='/loginRegister/password'">
+      <span class="text-2xl mr-2">重置密码</span>
       <span class="text-gray-500 cursor-pointer" @click="$router.push('login')">登录</span>
     </div>
     <t-form :rules="passwordResetRules" :data="passwordResetForm"

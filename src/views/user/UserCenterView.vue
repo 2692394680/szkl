@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { reactive, ref } from 'vue'
 import { UserApi } from '@/api/user_api'
 import { MessagePlugin } from 'tdesign-vue-next'
+import UserPasswordReset from '@/views/user/components/UserPasswordReset.vue'
 
 const userStore = getUserStore()
 const {
@@ -37,7 +38,7 @@ async function updateUserinfo(event) {
     <span> 下午好，欢迎回来 ~</span>
   </div>
   <t-divider></t-divider>
-  <div class="mt-10">
+  <div class="mt-10" v-if="$route.params.type==='info'">
     <div class="text-xl">个人信息</div>
     <div class="w-1/3 text-gray-700 mt-4">
       <t-form :data="userinfoForm" @submit="updateUserinfo">
@@ -69,6 +70,10 @@ async function updateUserinfo(event) {
         </t-form-item>
       </t-form>
     </div>
+  </div>
+  <div class="mt-10 w-1/3" v-if="$route.params.type==='password'">
+    <div class="text-xl mb-4">重置密码</div>
+    <UserPasswordReset></UserPasswordReset>
   </div>
 </template>
 
