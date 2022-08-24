@@ -52,17 +52,16 @@ export default [{
     }
   ]
 }, {
-  path: '/user',
+  path: '/user/:type',
   name: 'User',
   component: Layout,
   meta: {
     title: '个人中心',
     hidden: true
   },
-  redirect: '/user/center',
   children: [
     {
-      path: 'center',
+      path: '',
       name: 'UserCenter',
       component: () => import('@/views/user/UserCenterView.vue'),
       meta: { title: '个人信息' }
