@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { getUserStore } from '@/store/modules/user_store'
-import { reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 
 const userStore = getUserStore()
 const loginForm = reactive({
-  username: '19156574039',
-  password: 'Luo123456.'
+  username: '',
+  password: ''
 })
 const loginRules = reactive({
   username: [{
@@ -18,6 +18,25 @@ const loginRules = reactive({
     message: '密码不能为空',
     type: 'error'
   }]
+})
+const passwordRepeatChecked = ref(false)
+
+function passwordRepeat(event) {
+  if (event) {
+    localStorage.setItem('loginForm', JSON.stringify(loginForm))
+  } else {
+    localStorage.removeItem('loginForm')
+  }
+}
+
+onMounted(() => {
+  // 记住密码
+  const value = JSON.parse(localStorage.getItem('loginForm') || '{}')
+  if (localStorage.getItem('loginForm')) {
+    passwordRepeatChecked.value = true
+    loginForm.username = value.username
+    loginForm.password = value.password
+  }
 })
 </script>
 
@@ -39,7 +58,7 @@ const loginRules = reactive({
       </t-form-item>
       <t-form-item labelWidth="0">
         <div class="flex justify-between w-full cursor-pointer text-gray-500">
-          <t-checkbox class="text-gray-500">记住密码</t-checkbox>
+          <t-checkbox class="text-gray-500" v-model="passwordRepeatChecked" @change="passwordRepeat">记住密码</t-checkbox>
           <span @click="$router.push('password')">忘记密码?</span>
         </div>
       </t-form-item>
