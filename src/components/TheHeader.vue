@@ -39,7 +39,7 @@ export default {
             <p class="mr-4 cursor-pointer">{{ userinfo.name }}</p>
             <template v-slot:dropdown>
               <t-dropdown-menu>
-                <t-dropdown-item>个人信息</t-dropdown-item>
+                <t-dropdown-item @click="$router.push('/user/center')">个人信息</t-dropdown-item>
                 <t-dropdown-item>修改密码</t-dropdown-item>
                 <t-dropdown-item @click="getUserStore().logout()">退出登录</t-dropdown-item>
               </t-dropdown-menu>
