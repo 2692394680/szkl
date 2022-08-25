@@ -21,15 +21,16 @@ export class DeviceApi {
   })
 
   // 修改设备信息
-  infoUpdate = (data: object) => request({
-    method: 'POST',
-    url: '/api/device/update'
+  infoUpdate = (params) => request({
+    method: 'PUT',
+    url: '/device/' + params.id,
+    params
   })
 
   // 添加设备
-  add = (data: object) => request({
+  add = (params: object) => request({
     method: 'POST',
-    url: '/device/addDevice',
-    data
+    url: '/device',
+    params
   })
 }

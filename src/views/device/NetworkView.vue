@@ -5,6 +5,7 @@ import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { storeToRefs } from 'pinia'
 import { getDeviceStore } from '@/store/modules/device_store'
+import { cloneDeep } from 'lodash'
 
 const deviceApi = new DeviceApi()
 const { deviceList } = storeToRefs(getDeviceStore())
@@ -16,10 +17,11 @@ const tablePagination = reactive({
 
 // 黑白名单状态
 const state = ref(0)
-// 对话框状态
-const addDeviceVisible = ref(false)
-// 添加设备表单
-const addDeviceForm = reactive({
+// 对话框状态 1添加设备 2编辑设备
+const deviceVisible = ref(false)
+const deviceType = ref('添加设备')
+// 设备表单
+const deviceForm = ref({
   name: '',
   note: '',
   sn: '',
@@ -37,9 +39,23 @@ const addDeviceRules = {
   brand: [{ required: true }]
 }
 
+// 添加设备回调
+function addDeviceHandler() {
+  Object.keys(deviceForm.value).forEach(key => (deviceForm.value[key] = ''))
+  deviceVisible.value = true
+  deviceType.value = '添加设备'
+}
+
+// 编辑设备回调
+function updateDeviceHandler(row) {
+  deviceForm.value = cloneDeep(row)
+  deviceVisible.value = true
+  deviceType.value = '编辑设备'
+}
+
 // 获取设备列表
-function getList() {
-  getDeviceStore().getDeviceList({
+async function getList() {
+  await getDeviceStore().getDeviceList({
     dataSize: tablePagination.defaultPageSize,
     index: tablePagination.defaultCurrent,
     isDelete: state.value
@@ -47,14 +63,18 @@ function getList() {
   tablePagination.total = deviceList.value.length
 }
 
-// 添加设备
-async function addDevice(event) {
-  Object.assign(addDeviceForm)
+// 添加/编辑设备
+async function changeDevice(event) {
+  Object.assign(deviceForm)
   if (typeof event.validateResult === 'object') return
-  await deviceApi.add(addDeviceForm)
-  await MessagePlugin.success('添加设备成功')
+  if (deviceType.value === '添加设备') {
+    await deviceApi.add(deviceForm.value)
+  } else {
+    await deviceApi.infoUpdate(deviceForm.value)
+  }
+  await MessagePlugin.success(deviceType.value + '成功')
   await getList()
-  addDeviceVisible.value = false
+  deviceVisible.value = false
 }
 
 onMounted(() => {
@@ -72,49 +92,50 @@ onMounted(() => {
         </t-tabs>
       </div>
       <div>
-        <t-button @click="addDeviceVisible=true">添加设备</t-button>
+        <t-button @click="addDeviceHandler">添加设备</t-button>
       </div>
     </div>
 
     <t-table row-key="id" :data="deviceList" :columns="TABLE_COLUMNS" stripe bordered hover
              table-layout="fixed"
              :pagination="tablePagination">
-      <template #op>
+      <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
-          <a class=" mr-4">编辑</a>
+          <a class=" mr-4" @click="updateDeviceHandler(row)">编辑</a>
           <a v-show="state===0">禁用</a>
           <a v-show="state===1">启用</a>
         </div>
       </template>
     </t-table>
 
-    <t-dialog v-model:visible="addDeviceVisible" :destroyOnClose="true" :footer="false">
-      <t-form :data="addDeviceForm" label-align="left" @submit="addDevice" :rules="addDeviceRules">
+    <t-dialog v-model:visible="deviceVisible" :destroyOnClose="true" :footer="false">
+      <t-form :data="deviceForm" label-align="left" @submit="changeDevice"
+              :rules="addDeviceRules">
         <t-form-item labelWidth="0">
-          <div class="text-2xl">添加设备</div>
+          <div class="text-2xl">{{deviceType}}</div>
         </t-form-item>
         <t-form-item label="设备名称" name="name">
-          <t-input placeholder="请输入设备名称" v-model="addDeviceForm.name"></t-input>
+          <t-input placeholder="请输入设备名称" v-model="deviceForm.name"></t-input>
         </t-form-item>
         <t-form-item label="设备品牌" name="brand">
-          <t-input placeholder="请输入设备品牌" v-model="addDeviceForm.brand"></t-input>
+          <t-input placeholder="请输入设备品牌" v-model="deviceForm.brand"></t-input>
         </t-form-item>
         <t-form-item label="设备MAC" name="mac">
-          <t-input placeholder="请输入设备MAC" v-model="addDeviceForm.mac"></t-input>
+          <t-input placeholder="请输入设备MAC" v-model="deviceForm.mac"></t-input>
         </t-form-item>
         <t-form-item label="设备SN" name="sn">
-          <t-input placeholder="请输入设备SN" v-model="addDeviceForm.sn"></t-input>
+          <t-input placeholder="请输入设备SN" v-model="deviceForm.sn"></t-input>
         </t-form-item>
         <t-form-item label="设备位置" name="location">
-          <t-input placeholder="请输入设备位置" v-model="addDeviceForm.location"></t-input>
+          <t-input placeholder="请输入设备位置" v-model="deviceForm.location"></t-input>
         </t-form-item>
         <t-form-item label="备注" name="note">
-          <t-input placeholder="请输入备注" v-model="addDeviceForm.note"></t-input>
+          <t-input placeholder="请输入备注" v-model="deviceForm.note"></t-input>
         </t-form-item>
         <t-form-item>
           <div class="flex justify-end w-full">
             <t-button class="mr-4" theme="default" variant="base" type="reset">重置</t-button>
-            <t-button type="submit">添加设备</t-button>
+            <t-button type="submit">{{deviceType}}</t-button>
           </div>
         </t-form-item>
       </t-form>
