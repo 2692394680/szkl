@@ -70,11 +70,25 @@ async function changeDevice(event) {
   if (deviceType.value === '添加设备') {
     await deviceApi.add(deviceForm.value)
   } else {
-    await deviceApi.infoUpdate(deviceForm.value)
+    await deviceApi.update(deviceForm.value)
   }
   await MessagePlugin.success(deviceType.value + '成功')
   await getList()
   deviceVisible.value = false
+}
+
+// 禁用设备
+async function disableDevice(id) {
+  await deviceApi.disable({ deviceId: id })
+  await getList()
+  await MessagePlugin.success('禁用设备')
+}
+
+// 启用设备
+async function enableDevice(id) {
+  await deviceApi.enable({ deviceId: id })
+  await getList()
+  await MessagePlugin.success('启用设备')
 }
 
 onMounted(() => {
@@ -102,8 +116,8 @@ onMounted(() => {
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
           <a class=" mr-4" @click="updateDeviceHandler(row)">编辑</a>
-          <a v-show="state===0">禁用</a>
-          <a v-show="state===1">启用</a>
+          <a v-show="state===0" @click="disableDevice(row.id)">禁用</a>
+          <a v-show="state===1" @click="enableDevice(row.id)">启用</a>
         </div>
       </template>
     </t-table>
@@ -112,7 +126,7 @@ onMounted(() => {
       <t-form :data="deviceForm" label-align="left" @submit="changeDevice"
               :rules="addDeviceRules">
         <t-form-item labelWidth="0">
-          <div class="text-2xl">{{deviceType}}</div>
+          <div class="text-2xl">{{ deviceType }}</div>
         </t-form-item>
         <t-form-item label="设备名称" name="name">
           <t-input placeholder="请输入设备名称" v-model="deviceForm.name"></t-input>
@@ -135,7 +149,7 @@ onMounted(() => {
         <t-form-item>
           <div class="flex justify-end w-full">
             <t-button class="mr-4" theme="default" variant="base" type="reset">重置</t-button>
-            <t-button type="submit">{{deviceType}}</t-button>
+            <t-button type="submit">{{ deviceType }}</t-button>
           </div>
         </t-form-item>
       </t-form>

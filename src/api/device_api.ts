@@ -1,12 +1,6 @@
 import request from '@/tools/request'
 
 export class DeviceApi {
-  // 删除设备
-  delete = (mac: string) => request({
-    method: 'GET',
-    url: `/api/device/delDevice/${mac}`
-  })
-
   // 获取设备信息
   infoGet = (mac: string) => request({
     method: 'GET',
@@ -21,7 +15,7 @@ export class DeviceApi {
   })
 
   // 修改设备信息
-  infoUpdate = (params) => request({
+  update = (params) => request({
     method: 'PUT',
     url: '/device/' + params.id,
     params
@@ -31,6 +25,20 @@ export class DeviceApi {
   add = (params: object) => request({
     method: 'POST',
     url: '/device',
+    params
+  })
+
+  // 禁用设备
+  disable = (params: object) => request({
+    method: 'DELETE',
+    url: '/device',
+    params
+  })
+
+  // 启用设备
+  enable = (params: object) => request({
+    method: 'PUT',
+    url: '/device/cancelDelete',
     params
   })
 }
