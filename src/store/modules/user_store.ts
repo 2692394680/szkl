@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getUserInfo() {
-      const result: any = await userApi.userinfoGet({ id: this.userinfo.id }) || {}
+      const result: any = await userApi.infoGet({ id: this.userinfo.id }) || {}
       this.userinfo = result.value
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', {
           userApi.registerCode({ phone })
           break
         case 'userinfo':
-          userApi.userinfoUpdateCode({ phone })
+          userApi.infoUpdateCode({ phone })
           break
         case 'password':
           userApi.passwordResetCode({ phone })

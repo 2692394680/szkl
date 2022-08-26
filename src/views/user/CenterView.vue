@@ -25,7 +25,7 @@ const userinfoForm = reactive({
 
 async function updateUserinfo(event) {
   if (typeof event.validateResult === 'object') return
-  await userApi.userinfoUpdate(userinfoForm)
+  await userApi.infoUpdate(userinfoForm)
   await MessagePlugin.success('修改信息成功')
   await userStore.getUserInfo()
   isEdit.value = false

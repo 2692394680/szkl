@@ -16,29 +16,17 @@ export class UserApi {
   })
 
   // 获取用户信息
-  userinfoGet = (params) => request({
+  infoGet = (params) => request({
     method: 'GET',
     url: '/user/userInfo',
     params
   })
 
   // 修改用户信息
-  userinfoUpdate = (params) => request({
+  infoUpdate = (params) => request({
     method: 'PUT',
     url: '/user/userInfo/' + params.code,
     params
-  })
-
-  // 获取权限列表
-  permissionListGet = () => request({
-    method: 'GET',
-    url: '/api/getPermissions'
-  })
-
-  // 获取角色列表
-  rolesListGet = () => request({
-    method: 'GET',
-    url: '/api/getRoles'
   })
 
   // 重置密码
@@ -56,7 +44,7 @@ export class UserApi {
   })
 
   // 更新用户信息验证码
-  userinfoUpdateCode = (params) => request({
+  infoUpdateCode = (params) => request({
     method: 'GET',
     url: '/user/updateUserInfoCode',
     params
