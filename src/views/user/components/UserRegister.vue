@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import { getUserStore } from '@/store/modules/user_store'
 import { storeToRefs } from 'pinia'
+import { REGISTER_RULES } from '@/views/user/constants/rules_constants'
 
 const userStore = getUserStore()
 const {
@@ -17,39 +18,7 @@ const registerForm = reactive({
   passwordRepeat: ''
 })
 
-const registerRules = {
-  name: [{
-    required: true,
-    message: '用户名不能为空',
-    type: 'error'
-  }],
-  phone: [{
-    required: true,
-    message: '手机号不能为空',
-    type: 'error'
-  }],
-  code: [{
-    required: true,
-    message: '验证码不能为空',
-    type: 'error'
-  }],
-  email: [{
-    required: true,
-    message: '邮箱不能为空',
-    type: 'error'
-  }],
-  password: [{
-    required: true,
-    message: '密码不能为空',
-    type: 'error'
-  }, {
-    validator: (val) => {
-      const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.])[A-Za-z\d$@$!%*?&.]{8,}$/
-      return reg.test(val)
-    },
-    message: '密码由至少8位大小写字母和特殊字符组成',
-    type: 'error'
-  }],
+const registerRules = Object.assign(REGISTER_RULES, {
   passwordRepeat: [{
     required: true,
     message: '重复密码不能为空',
@@ -59,7 +28,7 @@ const registerRules = {
     message: '两次密码不相同',
     type: 'error'
   }]
-}
+})
 </script>
 
 <template>
