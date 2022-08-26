@@ -6,7 +6,7 @@ import { TOKEN_NAME } from '@/config/global'
 import { getUserStore } from '@/store/modules/user_store'
 
 const request = axios.create({
-  baseURL: 'http://co4.free.idcfengye.com',
+  baseURL: 'http://sub.co4.top:8080',
   timeout: 5000
 })
 
