@@ -56,4 +56,25 @@ export class UserApi {
     url: '/user/updatePasswordCode',
     params
   })
+
+  // 新增子用户
+  subAdd = (params) => request({
+    method: 'PUT',
+    url: '/user/subUser',
+    params
+  })
+
+  // 子用户列表
+  subListGet = (params) => request({
+    method: 'GET',
+    url: '/user/userList/' + params.isDelete,
+    params
+  })
+
+  // 子用户信息修改
+  subUpdate = (params) => request({
+    method: 'PUT',
+    url: '/user/updateSubUserInfo',
+    params
+  })
 }

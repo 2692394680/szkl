@@ -71,10 +71,10 @@ export default [{
       component: () => import('@/views/user/PasswordResetView.vue'),
       meta: { title: '重置密码' }
     }, {
-      path: 'sub-account',
-      name: 'SubAccount',
-      component: () => import('@/views/user/SubAccountView.vue'),
-      meta: { title: '子账号' }
+      path: 'sub-user',
+      name: 'SubUser',
+      component: () => import('@/views/user/SubUserView.vue'),
+      meta: { title: '子用户' }
     }
   ]
 }]
