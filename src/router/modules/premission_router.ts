@@ -52,19 +52,29 @@ export default [{
     }
   ]
 }, {
-  path: '/user/:type',
+  path: '/user',
   name: 'User',
   component: Layout,
   meta: {
-    title: '个人中心',
-    hidden: true
+    title: '用户中心',
+    hidden: false
   },
   children: [
     {
-      path: '',
-      name: 'UserCenter',
-      component: () => import('@/views/user/UserCenterView.vue'),
+      path: 'info',
+      name: 'Center',
+      component: () => import('@/views/user/CenterView.vue'),
       meta: { title: '个人信息' }
+    }, {
+      path: 'password',
+      name: 'Password',
+      component: () => import('@/views/user/PasswordResetView.vue'),
+      meta: { title: '重置密码' }
+    }, {
+      path: 'sub-account',
+      name: 'SubAccount',
+      component: () => import('@/views/user/SubAccountView.vue'),
+      meta: { title: '子账号' }
     }
   ]
 }]
