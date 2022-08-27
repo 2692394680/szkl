@@ -65,7 +65,7 @@ async function updateUserinfo(event) {
         <t-form-item label="">
           <t-button class="mr-4" v-if="!isEdit" @click="isEdit=true">修改信息</t-button>
           <t-button v-else type="submit">保存修改</t-button>
-          <t-button @click="passwordVisible=true">重置密码</t-button>
+          <t-button v-if="!isEdit" @click="passwordVisible=true">重置密码</t-button>
         </t-form-item>
       </t-form>
     </div>

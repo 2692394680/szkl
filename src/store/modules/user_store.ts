@@ -16,7 +16,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getUserInfo() {
-      const result: any = await userApi.infoGet({ id: this.userinfo.id }) || {}
+      const result: any = await userApi.infoGet({ userId: this.userinfo.id, isDelete: 0 }) || {}
       this.userinfo = result.value
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
@@ -69,6 +69,10 @@ export const useUserStore = defineStore('user', {
           this.timeTrue = true
         }
       }, 1000)
+    },
+    // 检查登录
+    async isLogin() {
+      await userApi.isLogin()
     }
   }
 })
