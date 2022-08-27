@@ -5,6 +5,7 @@ import { reactive, ref } from 'vue'
 import { UserApi } from '@/api/user_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import UserHeader from '@/views/user/components/UserHeader.vue'
+import UserPasswordReset from '@/views/user/components/UserPasswordReset.vue'
 
 const userStore = getUserStore()
 const {
@@ -22,6 +23,7 @@ const userinfoForm = reactive({
   note: userinfo.value.note,
   code: ''
 })
+const passwordVisible = ref(false)
 
 async function updateUserinfo(event) {
   if (typeof event.validateResult === 'object') return
@@ -61,12 +63,17 @@ async function updateUserinfo(event) {
           </t-button>
         </t-form-item>
         <t-form-item label="">
-          <t-button v-if="!isEdit" @click="isEdit=true">修改信息</t-button>
+          <t-button class="mr-4" v-if="!isEdit" @click="isEdit=true">修改信息</t-button>
           <t-button v-else type="submit">保存修改</t-button>
+          <t-button @click="passwordVisible=true">重置密码</t-button>
         </t-form-item>
       </t-form>
     </div>
   </div>
+
+  <t-dialog v-model:visible="passwordVisible" :footer="false">
+    <UserPasswordReset></UserPasswordReset>
+  </t-dialog>
 </template>
 
 <style scoped lang="less">

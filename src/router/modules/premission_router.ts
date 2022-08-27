@@ -66,11 +66,6 @@ export default [{
       component: () => import('@/views/user/CenterView.vue'),
       meta: { title: '个人信息' }
     }, {
-      path: 'password',
-      name: 'Password',
-      component: () => import('@/views/user/PasswordResetView.vue'),
-      meta: { title: '重置密码' }
-    }, {
       path: 'sub-user',
       name: 'SubUser',
       component: () => import('@/views/user/SubUserView.vue'),
