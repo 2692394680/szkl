@@ -73,7 +73,7 @@ export class UserApi {
   // 子用户列表
   subListGet = (params) => request({
     method: 'GET',
-    url: '/user/subUser/' + params.isDelete,
+    url: '/user/getSubUserList',
     params
   })
 
@@ -81,6 +81,20 @@ export class UserApi {
   subUpdate = (params) => request({
     method: 'PUT',
     url: '/user/updateSubUserInfo',
+    params
+  })
+
+  // 禁用子用户
+  subDisable = (params) => request({
+    method: 'DELETE',
+    url: '/user',
+    params
+  })
+
+  // 启用子用户
+  subEnable = (params) => request({
+    method: 'PUT',
+    url: '/user/cancelDeleteUser',
     params
   })
 }

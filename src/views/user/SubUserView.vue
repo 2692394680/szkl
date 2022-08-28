@@ -77,6 +77,20 @@ async function changeSubUser(event) {
   subUserVisible.value = false
 }
 
+// 禁用设备
+async function subUserDisable(id) {
+  await userApi.subDisable({ userId: id })
+  await getList()
+  await MessagePlugin.success('禁用设备')
+}
+
+// 启用设备
+async function subUserEnable(id) {
+  await userApi.subEnable({ userId: id })
+  await getList()
+  await MessagePlugin.success('启用设备')
+}
+
 onMounted(() => {
   getList()
 })
@@ -106,8 +120,8 @@ onMounted(() => {
     <template #op="{row}">
       <div class="cursor-pointer text-blue-700">
         <a class="mr-4" @click="updateSubUserHandler(row)">编辑</a>
-        <a v-show="state===0">禁用</a>
-        <a v-show="state===1">启用</a>
+        <a v-show="state===0" @click="subUserDisable(row.id)">禁用</a>
+        <a v-show="state===1" @click="subUserEnable(row.id)">启用</a>
       </div>
     </template>
   </t-table>
