@@ -2,7 +2,6 @@
 <template>
 <div class="flex justify-center items-center mb-4">
   <div style="position:fixed; left:0px; bottom:0px; width:100%; ">
-
     <div style="display:flex;justify-content:center;align-items:center;height: 50px;">
       <img src="https://szkelian.oss-cn-hangzhou.aliyuncs.com/2429921892/%E5%A4%87%E6%A1%88/beian.png">
       <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=43052402000208"

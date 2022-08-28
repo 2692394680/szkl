@@ -18,6 +18,6 @@ app.use(router)
 app.use(store)
 app.use(TDesign)
 
-app.component('SvgIcon', SvgIcon)
+app.component(SvgIcon.name, SvgIcon)
 
 app.mount('#app')
