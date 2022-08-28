@@ -18,9 +18,6 @@ request.interceptors.request.use((config: any) => {
   return Promise.reject(error)
 })
 
-/**
- * 返回数据需要以 result ? result : {} 的类型来接收
- */
 request.interceptors.response.use((res: AxiosResponse) => {
   const userStore = getUserStore()
   nprogress.done()

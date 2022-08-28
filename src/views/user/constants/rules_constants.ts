@@ -25,7 +25,7 @@ export const REGISTER_RULES = {
     type: 'error'
   }, {
     validator: (val) => {
-      const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&.=_-])[A-Za-z\d$@$!%*?&.=_-]{8,}$/
+      const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&.=_-])[A-Za-z\d$@!%*?&.=_-]{8,}$/
       return reg.test(val)
     },
     message: '密码由至少8位大小写字母和特殊字符和数字组成',
