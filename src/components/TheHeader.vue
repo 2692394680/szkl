@@ -10,6 +10,7 @@ const {
 } = storeToRefs(getUserStore())
 onMounted(() => {
   if (token.value !== 'main_token') {
+    getUserStore().isLogin()
     getUserStore().getUserInfo()
   }
 })

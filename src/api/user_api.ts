@@ -15,17 +15,23 @@ export class UserApi {
     params
   })
 
+  // 检查登录
+  isLogin = () => request({
+    method: 'GET',
+    url: '/user/isLogin'
+  })
+
   // 获取用户信息
   infoGet = (params) => request({
     method: 'GET',
-    url: '/user/userInfo',
+    url: '/user',
     params
   })
 
   // 修改用户信息
   infoUpdate = (params) => request({
     method: 'PUT',
-    url: '/user/userInfo/' + params.code,
+    url: '/user',
     params
   })
 
@@ -67,7 +73,7 @@ export class UserApi {
   // 子用户列表
   subListGet = (params) => request({
     method: 'GET',
-    url: '/user/userList/' + params.isDelete,
+    url: '/user/subUser/' + params.isDelete,
     params
   })
 
