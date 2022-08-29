@@ -66,7 +66,7 @@ export class UserApi {
   // 新增子用户
   subAdd = (params) => request({
     method: 'PUT',
-    url: '/user/subUser',
+    url: '/user/insertUser',
     params
   })
 
