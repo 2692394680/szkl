@@ -37,8 +37,8 @@ export default {
 </script>
 
 <template>
-  <svg :class="svgClass" aria-hidden="true" :style="`width:${props.size};height:${props.size};`">
-    <use :xlink:href="iconClassName" :fill="color"></use>
+  <svg :class="svgClass" aria-hidden="true" :style="`width:${size};height:${size};`">
+    <use class="icon" :xlink:href="iconClassName" :fill="color" x="8%" y="7%"></use>
   </svg>
 </template>
 
@@ -47,8 +47,12 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  //position: relative;
-  //fill: currentColor;
-  //vertical-align: -2px;
+  position: relative;
+  fill: currentColor;
+  vertical-align: -2px;
+}
+.icon{
+  width: 100%;
+  height: 100%;
 }
 </style>

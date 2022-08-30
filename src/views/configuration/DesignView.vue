@@ -294,11 +294,14 @@ watch(
               <!--圆形-->
               <div class="round item" v-if="item.type==='round'"
                    :style="`background-color:${item.bgColor};`"></div>
-              <div class="justify-center items-center" v-if="item.type==='switch'" :style="`width:${item.w}px;height:${item.h}px`">
+              <!--开关-->
+              <div class="justify-center items-center" v-if="item.type==='switch'"
+                   :style="`width:${item.w}px;height:${item.h}px`">
                 <SvgIcon :icon-name="item.value?'switch-on':'switch-off'" :size="'100%'"></SvgIcon>
               </div>
+              <!--按钮-->
               <div v-if="item.type==='button'">
-                <t-button size="large" block>{{item.value}}</t-button>
+                <t-button size="large" block>{{ item.value }}</t-button>
               </div>
             </Vue3DraggableResizable>
           </DraggableContainer>
@@ -348,22 +351,26 @@ watch(
               </div>
               <div class="box" v-if="canvasList[canvasTheIndex].textColor">
                 <p class="mb-3">文字颜色</p>
-                <t-color-picker v-model="canvasList[canvasTheIndex].textColor" format="HEX" :color-modes="['monochrome']"></t-color-picker>
+                <t-color-picker v-model="canvasList[canvasTheIndex].textColor" format="HEX"
+                                :color-modes="['monochrome']"></t-color-picker>
               </div>
               <div class="box" v-if="canvasList[canvasTheIndex].bgColor">
                 <p class="mb-3">背景颜色</p>
-                <t-color-picker v-model="canvasList[canvasTheIndex].bgColor" format="HEX" :color-modes="['monochrome']"></t-color-picker>
+                <t-color-picker v-model="canvasList[canvasTheIndex].bgColor" format="HEX"
+                                :color-modes="['monochrome']"></t-color-picker>
               </div>
             </t-tab-panel>
             <t-tab-panel value="2" label="属性" :destroyOnHide="false">
               <div class="box">
-                <t-input label="名称：" v-model="canvasList[canvasTheIndex].title" ></t-input>
+                <t-input label="名称：" v-model="canvasList[canvasTheIndex].title"></t-input>
               </div>
               <div class="box">
-                <t-input label="值：" v-model="canvasList[canvasTheIndex].value" v-if="canvasList[canvasTheIndex].type==='textbox'"></t-input>
+                <t-input label="值：" v-model="canvasList[canvasTheIndex].value"
+                         v-if="canvasList[canvasTheIndex].type==='textbox'"></t-input>
                 <t-row>
                   <span>开关状态：</span>
-                  <t-switch v-model="canvasList[canvasTheIndex].value" v-if="canvasList[canvasTheIndex].type==='switch'"></t-switch>
+                  <t-switch v-model="canvasList[canvasTheIndex].value"
+                            v-if="canvasList[canvasTheIndex].type==='switch'"></t-switch>
                 </t-row>
               </div>
             </t-tab-panel>
