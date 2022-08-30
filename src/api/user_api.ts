@@ -52,7 +52,7 @@ export class UserApi {
   // 更新用户信息验证码
   infoUpdateCode = (params) => request({
     method: 'GET',
-    url: '/user/updateUserInfoCode',
+    url: '/user/updateInfoCode',
     params
   })
 
@@ -80,7 +80,7 @@ export class UserApi {
   // 子用户信息修改
   subUpdate = (params) => request({
     method: 'PUT',
-    url: '/user/updateSubUserInfo',
+    url: '/user/updateUserInfo',
     params
   })
 
@@ -95,6 +95,13 @@ export class UserApi {
   subEnable = (params) => request({
     method: 'PUT',
     url: '/user/cancelDeleteUser',
+    params
+  })
+
+  // 修改子用户密码
+  subPasswordUpdate = (params) => request({
+    method: 'PUT',
+    url: '/user/updateUserPassword',
     params
   })
 }
