@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
-import { getUserStore } from '@/store/modules/user_store'
-import { storeToRefs } from 'pinia'
-import { REGISTER_RULES } from '@/views/user/constants/rules_constants'
+import {reactive} from 'vue'
+import {getUserStore} from '@/store/modules/user_store'
+import {storeToRefs} from 'pinia'
+import {REGISTER_RULES} from '@/views/user/constants/rules_constants'
 
 const userStore = getUserStore()
 const {
@@ -39,11 +39,18 @@ const registerRules = Object.assign(REGISTER_RULES, {
     </div>
     <t-form :rules="registerRules" :data="registerForm" @submit="userStore.register($event,registerForm)">
       <t-form-item labelWidth="0" name="name">
+        <!--autocomplete="new-password" 解决浏览器自动填充密码问题-->
+        <t-input placeholder="请输入用户名" size="large" v-model="registerForm.name" autocomplete="new-password"
+                 style="display:none;width:0;height:0;"></t-input>
         <t-input placeholder="请输入用户名" size="large" v-model="registerForm.name"></t-input>
       </t-form-item>
       <t-form-item labelWidth="0" name="password">
         <t-input placeholder="请输入密码" type="password" size="large"
+                 v-model="registerForm.password" autocomplete="new-password"
+                 style="display:none;width:0;height:0;"></t-input>
+        <t-input placeholder="请输入密码" type="password" size="large"
                  v-model="registerForm.password"></t-input>
+
       </t-form-item>
       <t-form-item labelWidth="0" name="passwordRepeat">
         <t-input placeholder="请再次输入密码" type="password" size="large"
