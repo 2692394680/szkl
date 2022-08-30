@@ -28,13 +28,13 @@ const loginRules = reactive({
 })
 const passwordRepeatChecked = ref(false)
 
-function passwordRepeat(event) {
-  if (event) {
-    localStorage.setItem('loginForm', JSON.stringify(loginForm))
-  } else {
-    localStorage.removeItem('loginForm')
-  }
-}
+// function passwordRepeat(event) {
+//   if (event) {
+//     localStorage.setItem('loginForm', JSON.stringify(loginForm))
+//   } else {
+//     localStorage.removeItem('loginForm')
+//   }
+// }
 
 onMounted(() => {
   // 记住密码
@@ -53,7 +53,7 @@ onMounted(() => {
       <span class="text-2xl mr-2">登录</span>
       <span class="text-gray-500 cursor-pointer" @click="$router.push('register')">注册</span>
     </div>
-    <t-form :rules="loginRules" :data="loginForm" @submit="userStore.login($event,loginForm)">
+    <t-form :rules="loginRules" :data="loginForm" @submit="userStore.login($event,loginForm,passwordRepeatChecked)">
       <t-form-item labelWidth="0" name="username">
         <t-input placeholder="请输入手机号或邮箱" size="large" v-model="loginForm.username"></t-input>
       </t-form-item>
@@ -65,7 +65,7 @@ onMounted(() => {
       </t-form-item>
       <t-form-item labelWidth="0">
         <div class="flex justify-between w-full cursor-pointer text-gray-500">
-          <t-checkbox class="text-gray-500" v-model="passwordRepeatChecked" @change="passwordRepeat">记住密码</t-checkbox>
+          <t-checkbox class="text-gray-500" :disabled="!loginForm.username||!loginForm.password" v-model="passwordRepeatChecked" >记住密码</t-checkbox>
           <span @click="$router.push('password')">忘记密码?</span>
         </div>
       </t-form-item>
