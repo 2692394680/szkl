@@ -4,12 +4,25 @@ import SvgIcon from '@/components/SvgIcon.vue'
 import UserLogin from '@/views/user/components/UserLogin.vue'
 import UserRegister from '@/views/user/components/UserRegister.vue'
 import UserPasswordReset from '@/views/user/components/UserPasswordReset.vue'
+import {useRoute, useRouter} from "vue-router";
 
+//修复： 防止/loginRegister,/后面乱传参导致页面异常问题(history模式)
+const type = useRoute().params.type || null
+console.log(type)
+if (type != "register" && type != "login") {
+  useRouter().push({
+    name: 'LoginRegister',
+    params: {
+      type: 'login'
+    }
+  })
+}
 </script>
 
 <template>
   <div id="login-register">
-    <div class="cursor-pointer text-white absolute top-5 left-5 flex justify-between items-center" @click="$router.push('/')">
+    <div class="cursor-pointer text-white absolute top-5 left-5 flex justify-between items-center"
+         @click="$router.push('/')">
       <SvgIcon icon-name="icon-arrow-left-s-line" size="1.8em"></SvgIcon>
       <span>回到首页</span>
     </div>

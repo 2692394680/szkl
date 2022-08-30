@@ -14,20 +14,33 @@ export const asyncRouterList: Array<RouteRecordRaw> = [...routeModuleList]
 
 // 存放固定路由
 export const defaultRouterList: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    redirect: '/welcome'
-  },
-  {
-    path: '/welcome',
-    name: 'Welcome',
-    component: () => import('@/views/home/WelcomeView.vue')
-  },
-  {
-    path: '/loginRegister/:type',
-    name: 'LoginRegister',
-    component: () => import('@/views/user/LoginRegisterView.vue')
-  }
+    {
+        path: '/',
+        redirect: '/welcome'
+    },
+    {
+        path: '/welcome',
+        name: 'Welcome',
+        component: () => import('@/views/home/WelcomeView.vue')
+    },
+    {
+        path: '/loginRegister/:type',
+        name: 'LoginRegister',
+        //修复： 防止/loginRegister,/后面乱传参导致页面异常问题(hash模式)
+        // props($route){
+        //     if ($route.params.type != "register" && $route.params.type != "login") {
+        //         $route.params={
+        //             type: 'login'
+        //         }
+        //     }
+        // },
+        component: () => import('@/views/user/LoginRegisterView.vue')
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: () => import('@/views/NotFound.vue')
+    }
 ]
 
 export const allRoutes = [...defaultRouterList, ...asyncRouterList]
