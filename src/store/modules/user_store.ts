@@ -35,6 +35,7 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem(TOKEN_NAME, this.token)
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
       if(passwordRepeatChecked) localStorage.setItem('loginForm', JSON.stringify(data))
+      else localStorage.removeItem('loginForm')
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)
       await router.push('/configuration')
     },
