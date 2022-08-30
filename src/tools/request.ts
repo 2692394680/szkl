@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
 import nprogress from 'nprogress'
-import 'nprogress/nprogress.css'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { TOKEN_NAME } from '@/config/global'
 import { getUserStore } from '@/store/modules/user_store'

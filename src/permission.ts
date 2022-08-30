@@ -1,5 +1,4 @@
 import NProgress from 'nprogress'
-import 'nprogress/nprogress.css'
 import router from '@/router/index_router'
 import { getUserStore } from '@/store/modules/user_store'
 import { MessagePlugin } from 'tdesign-vue-next'
@@ -7,7 +6,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 NProgress.configure({ showSpinner: false })
 const userStore = getUserStore()
 // 白名单页面
-const whiteListRouters = ['LoginRegister', 'Welcome']
+const whiteListRouters = ['LoginRegister', 'Welcome','NotFound']
 const loginRoutePath = '/loginRegister/login'
 
 router.beforeEach(async(to, from, next) => {
