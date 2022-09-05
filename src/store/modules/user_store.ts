@@ -27,14 +27,14 @@ export const useUserStore = defineStore('user', {
       this.userinfo = {}
       await router.push('/loginRegister/login')
     },
-    async login(event, data,passwordRepeatChecked) {
+    async login(event, data, passwordRepeatChecked) {
       if (typeof event.validateResult === 'object') return
       const result: any = await userApi.login(data) || {}
       this.userinfo = result?.value
-      this.token = result?.msg.substring(9)
+      this.token = result?.msg.substring(8)
       localStorage.setItem(TOKEN_NAME, this.token)
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
-      if(passwordRepeatChecked) localStorage.setItem('loginForm', JSON.stringify(data))
+      if (passwordRepeatChecked) localStorage.setItem('loginForm', JSON.stringify(data))
       else localStorage.removeItem('loginForm')
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)
       await router.push('/configuration')
@@ -74,7 +74,7 @@ export const useUserStore = defineStore('user', {
     },
     // 检查登录
     async isLogin() {
-      const data =await userApi.isLogin()
+      const data = await userApi.isLogin()
       console.log(data)
     }
   }
