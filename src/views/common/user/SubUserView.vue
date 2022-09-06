@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import UserHeader from '@/views/user/components/UserHeader.vue'
+import UserHeader from '@/views/common/user/components/UserHeader.vue'
 import { onMounted, reactive, ref } from 'vue'
-import { TABLE_COLUMNS } from '@/views/user/constants/sub-user_constants'
-import { REGISTER_RULES } from '@/views/user/constants/rules_constants'
+import { TABLE_COLUMNS } from '@/views/common/user/constants/sub-user_constants'
+import { REGISTER_RULES } from '@/views/common/user/constants/rules_constants'
 import { UserApi } from '@/api/user_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { cloneDeep } from 'lodash'

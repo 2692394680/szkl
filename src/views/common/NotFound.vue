@@ -165,11 +165,11 @@
 
 <script>
 export default {
-  name: "NotFound"
+  name: 'NotFound'
 }
 </script>
 
 <style scoped lang="less">
-@import "../styles/reveal.less";
-@import "../styles/style.less";
+@import "../../styles/reveal.less";
+@import "../../styles/style.less";
 </style>

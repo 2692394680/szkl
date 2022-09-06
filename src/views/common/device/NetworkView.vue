@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TABLE_COLUMNS } from '@/views/device/constants/nework_constants'
+import { TABLE_COLUMNS } from '@/views/common/device/constants/nework_constants'
 import { onMounted, reactive, ref } from 'vue'
 import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'

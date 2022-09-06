@@ -21,7 +21,7 @@ export const ELEMENT_LIBRARY = [
       type: 'round',
       bgColor: '#45869D',
       lockAspectRatio: true,
-      radius: 0
+      radius: undefined
     }, {
       title: '表格',
       type: 'table'

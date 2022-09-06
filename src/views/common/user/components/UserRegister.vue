@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {reactive} from 'vue'
-import {getUserStore} from '@/store/modules/user_store'
-import {storeToRefs} from 'pinia'
-import {REGISTER_RULES} from '@/views/user/constants/rules_constants'
+import { reactive } from 'vue'
+import { getUserStore } from '@/store/modules/user_store'
+import { storeToRefs } from 'pinia'
+import { REGISTER_RULES } from '@/views/common/user/constants/rules_constants'
 
 const userStore = getUserStore()
 const {

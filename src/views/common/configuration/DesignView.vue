@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue'
-import { ELEMENT_LIBRARY } from '@/views/configuration/constants/design_constants'
+import { ELEMENT_LIBRARY } from '@/views/common/configuration/constants/design_constants'
 import { ref, defineComponent, watch, onMounted, onBeforeMount, shallowRef } from 'vue'
 import Vue3DraggableResizable, { DraggableContainer } from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
@@ -287,7 +287,7 @@ watch(
               <!--文本框-->
               <input class="textBox" type="text" v-model="item.value"
                      v-if="item.type==='textBox'"
-                     :style="`color:${item.color};background-color:${item.bgColor};border-radius:${item.radius}px`"/>
+                     :style="`color:${item.textColor};background-color:${item.bgColor};border-radius:${item.radius}px`"/>
               <!--矩形-->
               <div class="rectangle item" v-if="item.type==='rectangle'"
                    :style="`background-color:${item.bgColor};border-radius:${item.radius}px`"></div>
@@ -344,7 +344,7 @@ watch(
                              theme="normal"></t-input>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="圆角：" class="item-input" v-model="canvasList[canvasTheIndex].radius"
+                    <t-input label="圆角：" class="item-input" v-model.number="canvasList[canvasTheIndex].radius"
                              theme="normal" v-if="canvasList[canvasTheIndex].radius!==undefined"></t-input>
                   </t-col>
                 </t-row>

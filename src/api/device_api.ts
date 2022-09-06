@@ -7,10 +7,10 @@ export class DeviceApi {
     url: `/api/device/device/${mac}`
   })
 
-  // 获取设备列表
+  // 获取指定用户设备列表
   listGet = (params) => request({
     method: 'GET',
-    url: '/device',
+    url: '/device/user',
     params
   })
 
