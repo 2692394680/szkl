@@ -14,14 +14,14 @@ export default [{
     {
       path: 'model',
       name: 'Model',
-      component: () => import('@/views/configuration/ModelView.vue'),
+      component: () => import('@/views/common/configuration/ModelView.vue'),
       meta: { title: '模型组态' }
     }
   ]
 }, {
   path: '/configuration/design',
   name: 'Design',
-  component: () => import('@/views/configuration/DesignView.vue'),
+  component: () => import('@/views/common/configuration/DesignView.vue'),
   meta: { title: '组态设计', hidden: true }
 }, {
   path: '/device',
@@ -33,22 +33,8 @@ export default [{
     {
       path: 'network',
       name: 'Network',
-      component: () => import('@/views/device/NetworkView.vue'),
+      component: () => import('@/views/common/device/NetworkView.vue'),
       meta: { title: '联网设备' }
-    }
-  ]
-}, {
-  path: '/manager',
-  name: 'Manager',
-  component: Layout,
-  redirect: '/manager/user',
-  meta: { title: '管理员' },
-  children: [
-    {
-      path: 'user',
-      name: 'User',
-      component: () => import('@/views/manager/UserView.vue'),
-      meta: { title: '用户管理' }
     }
   ]
 }, {
@@ -63,12 +49,12 @@ export default [{
     {
       path: 'info',
       name: 'Center',
-      component: () => import('@/views/user/CenterView.vue'),
+      component: () => import('@/views/common/user/CenterView.vue'),
       meta: { title: '个人信息' }
     }, {
       path: 'sub-user',
       name: 'SubUser',
-      component: () => import('@/views/user/SubUserView.vue'),
+      component: () => import('@/views/common/user/SubUserView.vue'),
       meta: { title: '子用户' }
     }
   ]

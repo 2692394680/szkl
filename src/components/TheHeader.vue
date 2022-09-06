@@ -1,19 +1,31 @@
 <script setup lang="ts">
 import { getUserStore } from '@/store/modules/user_store'
 import { getConfigurationStore } from '@/store/modules/configuration_store'
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useRoute } from 'vue-router'
 
 const {
   token,
   userinfo
 } = storeToRefs(getUserStore())
+const route = useRoute()
+
+const isManager = ref(route.path.indexOf('/manager') === 0)
+
 onMounted(() => {
   if (token.value !== 'main_token') {
     getUserStore().isLogin()
     getUserStore().getUserInfo()
   }
 })
+
+watch(
+  () => route.fullPath,
+  () => {
+    isManager.value = route.path.indexOf('/manager') === 0
+  }
+)
 </script>
 <script lang="ts">
 export default {
@@ -25,6 +37,7 @@ export default {
   <div class="header-box">
     <t-head-menu theme="dark" height="120px">
       <p class="text-3xl text-white cursor-pointer mr-4" @click="$router.push('/')">SZKelian</p>
+      <p class="text-white cursor-pointer" v-if="isManager">管理员</p>
       <div v-if="$route.name==='Design'" class="text-gray-400">
         <p class="cursor-pointer mr-8" @click="getConfigurationStore().saveDesignData()">保存</p>
       </div>
@@ -46,7 +59,8 @@ export default {
               </t-dropdown-menu>
             </template>
           </t-dropdown>
-          <span class="cursor-pointer mr-8" @click="$router.push('/configuration')">控制台</span>
+          <span class="cursor-pointer mr-4" @click="$router.push('/controller')" v-if="isManager">普通用户</span>
+          <span class="cursor-pointer mr-8" @click="$router.push(isManager?'/manager/configuration':'/configuration')">控制台</span>
         </div>
       </template>
     </t-head-menu>

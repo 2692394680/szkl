@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { asyncRouterList } from '@/router/index_router'
+import { asyncRouterManagerList, asyncRouterUserList } from '@/router/index_router'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -8,13 +8,15 @@ const router = useRouter()
 const menuExpanded = ref([route.path.substring(0, route.path.lastIndexOf('/'))])
 
 const menuList = computed(() => {
-  return asyncRouterList.filter(item => item.meta && item.meta.hidden !== true)
+  if (route.path.indexOf('/manager') === 0) {
+    return asyncRouterManagerList.filter(item => item.meta && item.meta.hidden !== true)
+  }
+  return asyncRouterUserList.filter(item => item.meta && item.meta.hidden !== true)
 })
 
 function menuChange(e) {
   router.push(e)
 }
-
 </script>
 
 <template>
