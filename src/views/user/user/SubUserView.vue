@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import SubUserView from '@/views/common/user/SubUserView.vue'
 </script>
 
 <template>
-<div>用户管理</div>
+<SubUserView></SubUserView>
 </template>
 
 <style scoped lang="less">
-
 </style>
