@@ -10,7 +10,7 @@ export const useDeviceStore = defineStore('deviceStore', {
   }),
   actions: {
     async getDeviceList(params) {
-      const result: any = await deviceApi.listGet(params) || {}
+      const result: any = await deviceApi.list(params) || {}
       this.deviceList = result.value?.records
     }
   }
