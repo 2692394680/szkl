@@ -4,8 +4,10 @@ import { TOKEN_NAME, USERINFO_NAME } from '@/config/global'
 import { MessagePlugin } from 'tdesign-vue-next'
 import router from '@/router/index_router'
 import { UserApi } from '@/api/user_api'
+import { AuthApi } from '@/api/auth_api'
 
 const userApi = new UserApi()
+const authApi = new AuthApi()
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -16,7 +18,7 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async getUserInfo() {
-      const result: any = await userApi.infoGet({ userId: this.userinfo.id, isDelete: 0 }) || {}
+      const result: any = await userApi.info({ userId: this.userinfo.id, isDelete: 0 }) || {}
       this.userinfo = result.value
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
@@ -34,10 +36,16 @@ export const useUserStore = defineStore('user', {
       this.token = result?.msg.substring(8)
       localStorage.setItem(TOKEN_NAME, this.token)
       localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
+      // 记住密码
       if (passwordRepeatChecked) localStorage.setItem('loginForm', JSON.stringify(data))
       else localStorage.removeItem('loginForm')
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)
-      await router.push('/configuration')
+      // 判断用户角色
+      const role:any = await authApi.permissionRole({ type: false })
+      role.value.forEach(item => {
+        if (item.indexOf('用户')) router.push('/configuration')
+        else router.push('/manager/configuration')
+      })
     },
     async register(event, data) {
       if (typeof event.validateResult === 'object') return
@@ -74,8 +82,7 @@ export const useUserStore = defineStore('user', {
     },
     // 检查登录
     async isLogin() {
-      const data = await userApi.isLogin()
-      console.log(data)
+      await userApi.isLogin()
     }
   }
 })
