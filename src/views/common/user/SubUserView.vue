@@ -54,7 +54,7 @@ function updateSubUserHandler(row) {
 
 // 获取子用户列表
 async function getList() {
-  const result:any = await userApi.subListGet({
+  const result:any = await userApi.subList({
     index: tablePagination.defaultCurrent,
     dataSize: tablePagination.defaultPageSize,
     isDelete: state.value
