@@ -2,13 +2,13 @@ import request from '@/tools/request'
 
 export class DeviceApi {
   // 获取设备信息
-  infoGet = (mac: string) => request({
+  info = (mac: string) => request({
     method: 'GET',
     url: `/api/device/device/${mac}`
   })
 
   // 获取指定用户设备列表
-  listGet = (params) => request({
+  list = (params) => request({
     method: 'GET',
     url: '/device/user',
     params

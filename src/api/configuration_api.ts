@@ -2,7 +2,7 @@ import request from '@/tools/request'
 
 export class ConfigurationApi {
   // 获取组态模板列表
-  listGet = (params) => request({
+  list = (params) => request({
     method: 'GET',
     url: '/model',
     params
@@ -25,7 +25,7 @@ export class ConfigurationApi {
   })
 
   // 更新组�获取组态详细信息
-  detailGet = (url) => request({
+  detail = (url) => request({
     method: 'GET',
     url
   })

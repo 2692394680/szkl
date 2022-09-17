@@ -22,7 +22,7 @@ export class UserApi {
   })
 
   // 获取用户信息
-  infoGet = (params) => request({
+  info = (params) => request({
     method: 'GET',
     url: '/user',
     params
@@ -71,7 +71,7 @@ export class UserApi {
   })
 
   // 子用户列表
-  subListGet = (params) => request({
+  subList = (params) => request({
     method: 'GET',
     url: '/user/getSubUserList',
     params
