@@ -54,7 +54,7 @@ export default [{
     }, {
       path: 'sub-user',
       name: 'SubUser',
-      component: () => import('@/views/common/user/SubUserView.vue'),
+      component: () => import('@/views/user/user/SubUserView.vue'),
       meta: { title: '子用户' }
     }
   ]
