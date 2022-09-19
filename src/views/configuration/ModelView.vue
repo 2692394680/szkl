@@ -2,7 +2,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import { ConfigurationApi } from '@/api/configuration_api'
 import { useRouter } from 'vue-router'
-import { TABLE_COLUMNS } from '@/views/common/configuration/constants/model_constants'
+import { TABLE_COLUMNS } from '@/views/configuration/constants/model_constants'
 
 import moment from 'moment'
 

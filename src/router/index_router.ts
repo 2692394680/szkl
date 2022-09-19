@@ -1,25 +1,16 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 // 自动导入modules文件夹下所有ts文件
-const userModules = import.meta.globEager('./modules/**/user*.ts')
-const managerModules = import.meta.globEager('./modules/**/manager*.ts')
+const modules = import.meta.globEager('./modules/**/*.ts')
 
 // 路由暂存
-const routeModuleUserList: Array<RouteRecordRaw> = []
-const routeModuleManagerList: Array<RouteRecordRaw> = []
-Object.keys(userModules).forEach(key => {
-  const mod = userModules[key].default || {}
+const routeModuleList: Array<RouteRecordRaw> = []
+Object.keys(modules).forEach(key => {
+  const mod = modules[key].default || {}
   const modList = Array.isArray(mod) ? [...mod] : [mod]
-  routeModuleUserList.push(...modList)
+  routeModuleList.push(...modList)
 })
-Object.keys(managerModules).forEach(key => {
-  const mod = managerModules[key].default || {}
-  const modList = Array.isArray(mod) ? [...mod] : [mod]
-  routeModuleManagerList.push(...modList)
-})
-
 // 存放动态路由
-export const asyncRouterUserList: Array<RouteRecordRaw> = [...routeModuleUserList]
-export const asyncRouterManagerList: Array<RouteRecordRaw> = [...routeModuleManagerList]
+export const asyncRouterList: Array<RouteRecordRaw> = [...routeModuleList]
 
 // 存放固定路由
 export const defaultRouterList: Array<RouteRecordRaw> = [
@@ -30,7 +21,7 @@ export const defaultRouterList: Array<RouteRecordRaw> = [
   {
     path: '/welcome',
     name: 'Welcome',
-    component: () => import('@/views/common/home/WelcomeView.vue')
+    component: () => import('@/views/home/WelcomeView.vue')
   },
   {
     path: '/loginRegister/:type',
@@ -43,17 +34,16 @@ export const defaultRouterList: Array<RouteRecordRaw> = [
     //         }
     //     }
     // },
-    component: () => import('@/views/common/user/LoginRegisterView.vue')
+    component: () => import('@/views/user/LoginRegisterView.vue')
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('@/views/common/NotFound.vue')
+    component: () => import('@/views/NotFound.vue')
   }
 ]
 
-export const allRoutes = [...defaultRouterList, ...asyncRouterUserList, ...asyncRouterManagerList]
-console.log(allRoutes)
+export const allRoutes = [...defaultRouterList, ...asyncRouterList]
 
 const router = createRouter({
   history: createWebHistory(),

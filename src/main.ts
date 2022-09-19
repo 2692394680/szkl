@@ -4,7 +4,6 @@ import SvgIcon from '@/components/SvgIcon.vue'
 import '@/assets/iconfont/iconfont'
 import '@/Permission'
 import 'nprogress/nprogress.css'
-import "@/styles/bootstrap.min.css";
 
 import router from '@/router/index_router'
 import store from '@/store/index_store'

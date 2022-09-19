@@ -14,14 +14,14 @@ export default [{
     {
       path: 'model',
       name: 'Model',
-      component: () => import('@/views/common/configuration/ModelView.vue'),
+      component: () => import('@/views/configuration/ModelView.vue'),
       meta: { title: '模型组态' }
     }
   ]
 }, {
   path: '/configuration/design',
   name: 'Design',
-  component: () => import('@/views/common/configuration/DesignView.vue'),
+  component: () => import('@/views/configuration/DesignView.vue'),
   meta: { title: '组态设计', hidden: true }
 }, {
   path: '/device',
@@ -33,7 +33,7 @@ export default [{
     {
       path: 'network',
       name: 'Network',
-      component: () => import('@/views/common/device/NetworkView.vue'),
+      component: () => import('@/views/device/NetworkView.vue'),
       meta: { title: '联网设备' }
     }
   ]
@@ -48,13 +48,13 @@ export default [{
   children: [
     {
       path: 'info',
-      name: 'Center',
-      component: () => import('@/views/common/user/CenterView.vue'),
+      name: 'Info',
+      component: () => import('@/views/user/CenterView.vue'),
       meta: { title: '个人信息' }
     }, {
       path: 'sub-user',
       name: 'SubUser',
-      component: () => import('@/views/user/user/SubUserView.vue'),
+      component: () => import('@/views/user/SubUserView.vue'),
       meta: { title: '子用户' }
     }
   ]

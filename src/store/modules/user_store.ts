@@ -4,10 +4,8 @@ import { TOKEN_NAME, USERINFO_NAME } from '@/config/global'
 import { MessagePlugin } from 'tdesign-vue-next'
 import router from '@/router/index_router'
 import { UserApi } from '@/api/user_api'
-import { AuthApi } from '@/api/auth_api'
 
 const userApi = new UserApi()
-const authApi = new AuthApi()
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -40,12 +38,7 @@ export const useUserStore = defineStore('user', {
       if (passwordRepeatChecked) localStorage.setItem('loginForm', JSON.stringify(data))
       else localStorage.removeItem('loginForm')
       await MessagePlugin.success('欢迎回来' + this.userinfo.name)
-      // 判断用户角色
-      const role:any = await authApi.permissionRole({ type: false })
-      role.value.forEach(item => {
-        if (item.indexOf('用户')) router.push('/configuration')
-        else router.push('/manager/configuration')
-      })
+      await router.push('/controller')
     },
     async register(event, data) {
       if (typeof event.validateResult === 'object') return

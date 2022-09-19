@@ -170,6 +170,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import "../../styles/reveal.less";
-@import "../../styles/style.less";
+@import "../styles/reveal.less";
+@import "../styles/style.less";
 </style>

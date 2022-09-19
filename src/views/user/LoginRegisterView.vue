@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import SvgIcon from '@/components/SvgIcon.vue'
 
-import UserLogin from '@/views/common/user/components/UserLogin.vue'
-import UserRegister from '@/views/common/user/components/UserRegister.vue'
-import UserPasswordReset from '@/views/common/user/components/UserPasswordReset.vue'
+import UserLogin from '@/views/user/components/UserLogin.vue'
+import UserRegister from '@/views/user/components/UserRegister.vue'
+import UserPasswordReset from '@/views/user/components/UserPasswordReset.vue'
 import { useRoute, useRouter } from 'vue-router'
 
 // 修复： 防止/loginRegister,/后面乱传参导致页面异常问题(history模式)

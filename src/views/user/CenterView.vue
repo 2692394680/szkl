@@ -4,8 +4,8 @@ import { storeToRefs } from 'pinia'
 import { reactive, ref } from 'vue'
 import { UserApi } from '@/api/user_api'
 import { MessagePlugin } from 'tdesign-vue-next'
-import UserHeader from '@/views/common/user/components/UserHeader.vue'
-import UserPasswordReset from '@/views/common/user/components/UserPasswordReset.vue'
+import UserHeader from '@/views/user/components/UserHeader.vue'
+import UserPasswordReset from '@/views/user/components/UserPasswordReset.vue'
 
 const userStore = getUserStore()
 const {
