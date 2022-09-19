@@ -36,7 +36,8 @@ const addDeviceRules = {
   sn: [{ required: true }],
   mac: [{ required: true }],
   location: [{ required: true }],
-  brand: [{ required: true }]
+  brand: [{ required: true }],
+  note: [{ required: true }]
 }
 
 // 添加设备回调
