@@ -20,7 +20,7 @@ export default [{
   ]
 }, {
   path: '/manager/configuration/design',
-  name: 'Design',
+  name: 'ManagerDesign',
   component: () => import('@/views/common/configuration/DesignView.vue'),
   meta: { title: '组态设计', hidden: true }
 }, {

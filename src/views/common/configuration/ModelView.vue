@@ -37,7 +37,7 @@ const state = ref(0)
 
 // 获取模型组态列表
 const getList = async() => {
-  const result: any = await configurationApi.listGet({
+  const result: any = await configurationApi.list({
     dataSize: tablePagination.defaultPageSize,
     index: tablePagination.defaultCurrent,
     isDelete: state.value
