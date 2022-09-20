@@ -16,6 +16,7 @@ const tablePagination = reactive({
 })
 const state = ref(0)
 const subUserVisible = ref(false)
+const passwordRepeatVisible = ref(false)
 const subUserType = ref('添加子用户')
 const subUserForm = ref({
   name: '',
@@ -24,6 +25,11 @@ const subUserForm = ref({
   passwordRepeat: '',
   email: '',
   note: ''
+})
+const subUserPasswordRepeatForm = reactive({
+  password: '',
+  passwordRepeat: '',
+  userId: ''
 })
 const subUserRules = Object.assign(REGISTER_RULES, {
   passwordRepeat: [{
@@ -36,6 +42,29 @@ const subUserRules = Object.assign(REGISTER_RULES, {
     type: 'error'
   }]
 })
+const subUserPasswordRepeatRules = {
+  password: [{
+    required: true,
+    message: '密码不能为空',
+    type: 'error'
+  }, {
+    validator: (val) => {
+      const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&.=_-])[A-Za-z\d$@!%*?&.=_-]{8,}$/
+      return reg.test(val)
+    },
+    message: '密码由至少8位大小写字母和特殊字符和数字组成',
+    type: 'error'
+  }],
+  passwordRepeat: [{
+    required: true,
+    message: '重复密码不能为空',
+    type: 'error'
+  }, {
+    validator: (val) => val === subUserPasswordRepeatForm.password,
+    message: '两次密码不相同',
+    type: 'error'
+  }]
+}
 
 // 添加子用户回调
 function addSubUserHandler() {
@@ -52,9 +81,15 @@ function updateSubUserHandler(row) {
   subUserType.value = '编辑子用户'
 }
 
+// 重置密码回调
+function passwordRepeatHandler(userId) {
+  passwordRepeatVisible.value = true
+  subUserPasswordRepeatForm.userId = userId
+}
+
 // 获取子用户列表
 async function getList() {
-  const result:any = await userApi.subList({
+  const result: any = await userApi.subList({
     index: tablePagination.defaultCurrent,
     dataSize: tablePagination.defaultPageSize,
     isDelete: state.value
@@ -91,6 +126,14 @@ async function subUserEnable(id) {
   await MessagePlugin.success('启用设备')
 }
 
+// 重置子用户密码
+async function subUserPasswordRepeat(event) {
+  if (typeof event.validateResult === 'object') return
+  await userApi.subPasswordRepeat(subUserPasswordRepeatForm)
+  await MessagePlugin.success('重置密码成功')
+  passwordRepeatVisible.value = true
+}
+
 onMounted(() => {
   getList()
 })
@@ -98,9 +141,9 @@ onMounted(() => {
 
 <template>
   <UserHeader></UserHeader>
-<!--  <div class="mt-10">-->
-<!--    <div class="text-xl mb-4">子账号管理</div>-->
-<!--  </div>-->
+  <!--  <div class="mt-10">-->
+  <!--    <div class="text-xl mb-4">子账号管理</div>-->
+  <!--  </div>-->
 
   <div class="flex justify-between mb-4">
     <div>
@@ -117,19 +160,26 @@ onMounted(() => {
   <t-table row-key="id" :columns="TABLE_COLUMNS" stripe bordered hover
            table-layout="fixed" :data="subUserList"
            :pagination="tablePagination">
+    <template #createTime="{row}">
+      <div>
+        {{ row.createTime }}
+      </div>
+    </template>
     <template #op="{row}">
       <div class="cursor-pointer text-blue-700">
         <a class="mr-4" @click="updateSubUserHandler(row)">编辑</a>
         <a v-show="state===0" @click="subUserDisable(row.id)">禁用</a>
         <a v-show="state===1" @click="subUserEnable(row.id)">启用</a>
+        <a class="ml-4" @click="passwordRepeatHandler(row.id)">重置密码</a>
       </div>
     </template>
   </t-table>
 
+  <!--添加子用户-->
   <t-dialog v-model:visible="subUserVisible" :destroyOnClose="true" :footer="false">
     <t-form :data="subUserForm" :rules="subUserRules" @submit="changeSubUser">
       <t-form-item labelWidth="0">
-        <div class="text-2xl">{{subUserType}}</div>
+        <div class="text-2xl">{{ subUserType }}</div>
       </t-form-item>
       <t-form-item label="用户名" name="name">
         <t-input placeholder="请输入用户名" size="large" v-model="subUserForm.name"></t-input>
@@ -156,6 +206,27 @@ onMounted(() => {
           <t-button class="mr-4" theme="default" variant="base" type="reset">重置</t-button>
           <t-button type="submit">确定</t-button>
         </div>
+      </t-form-item>
+    </t-form>
+  </t-dialog>
+
+  <!--重置密码-->
+  <t-dialog v-model:visible="passwordRepeatVisible" :destroyOnClose="true" :footer="false">
+    <t-form :data="subUserPasswordRepeatForm" :rules="subUserPasswordRepeatRules"
+            @submit="subUserPasswordRepeat">
+      <t-form-item labelWidth="0">
+        <div class="text-2xl">重置密码</div>
+      </t-form-item>
+      <t-form-item label="密码" name="password">
+        <t-input placeholder="请输入密码" type="password" size="large"
+                 v-model="subUserPasswordRepeatForm.password"></t-input>
+      </t-form-item>
+      <t-form-item label="确认密码" name="passwordRepeat">
+        <t-input placeholder="请再次输入密码" type="password" size="large"
+                 v-model="subUserPasswordRepeatForm.passwordRepeat"></t-input>
+      </t-form-item>
+      <t-form-item>
+        <t-button type="submit">确定</t-button>
       </t-form-item>
     </t-form>
   </t-dialog>
