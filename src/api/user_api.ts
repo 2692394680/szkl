@@ -99,7 +99,7 @@ export class UserApi {
   })
 
   // 修改子用户密码
-  subPasswordUpdate = (params) => request({
+  subPasswordRepeat = (params) => request({
     method: 'PUT',
     url: '/user/updateUserPassword',
     params
