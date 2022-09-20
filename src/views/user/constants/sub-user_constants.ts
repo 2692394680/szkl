@@ -10,8 +10,7 @@ export const TABLE_COLUMNS = [
     attrs: {
       'data-id': 'first-column'
     }
-  },
-  {
+  }, {
     colKey: 'name',
     title: '用户名'
   }, {
@@ -20,12 +19,11 @@ export const TABLE_COLUMNS = [
   }, {
     colKey: 'email',
     title: '邮箱'
-  },
-  {
-    colKey: 'createTime',
-    title: '创建时间'
-  },
-  {
+  }, {
+    colKey: 'note',
+    title: '备注'
+  }, {
+    width: 250,
     colKey: 'op',
     title: '操作',
     /**
