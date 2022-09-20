@@ -6,7 +6,9 @@ const deviceApi = new DeviceApi()
 
 export const useDeviceStore = defineStore('deviceStore', {
   state: () => ({
-    deviceList: []
+    deviceList: [],
+    // 子用户id
+    userId: ''
   }),
   actions: {
     async getDeviceList(params) {

@@ -8,7 +8,7 @@ import { getDeviceStore } from '@/store/modules/device_store'
 import { cloneDeep } from 'lodash'
 
 const deviceApi = new DeviceApi()
-const { deviceList } = storeToRefs(getDeviceStore())
+const { deviceList, userId } = storeToRefs(getDeviceStore())
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
@@ -59,7 +59,8 @@ async function getList() {
   await getDeviceStore().getDeviceList({
     dataSize: tablePagination.defaultPageSize,
     index: tablePagination.defaultCurrent,
-    isDelete: state.value
+    isDelete: state.value,
+    userId: userId.value
   })
   tablePagination.total = deviceList.value.length
 }
@@ -92,6 +93,12 @@ async function enableDevice(id) {
   await MessagePlugin.success('启用设备')
 }
 
+// 关闭用户标签
+function userTagClose() {
+  userId.value = ''
+  getList()
+}
+
 onMounted(() => {
   getList()
 })
@@ -100,11 +107,16 @@ onMounted(() => {
 <template>
   <div>
     <div class="flex justify-between mb-4">
-      <div>
-        <t-tabs v-model="state" :default-value="0" @change="getList">
+      <div class="flex items-center">
+        <t-tabs v-model="state" :default-value="0" @change="getList" class="mr-4">
           <t-tab-panel :value="0" label="白名单"></t-tab-panel>
           <t-tab-panel :value="1" label="黑名单"></t-tab-panel>
         </t-tabs>
+        <div>
+          <t-tag v-if="userId" closable @close="userTagClose">
+            {{userId}}
+          </t-tag>
+        </div>
       </div>
       <div>
         <t-button @click="addDeviceHandler">添加设备</t-button>

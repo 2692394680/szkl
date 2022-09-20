@@ -6,8 +6,13 @@ import { REGISTER_RULES } from '@/views/user/constants/rules_constants'
 import { UserApi } from '@/api/user_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { cloneDeep } from 'lodash'
+import { storeToRefs } from 'pinia'
+import { getDeviceStore } from '@/store/modules/device_store'
+import { useRouter } from 'vue-router'
 
 const userApi = new UserApi()
+const { userId } = storeToRefs(getDeviceStore())
+const router = useRouter()
 const subUserList = ref([])
 const tablePagination = reactive({
   defaultCurrent: 1,
@@ -134,6 +139,12 @@ async function subUserPasswordRepeat(event) {
   passwordRepeatVisible.value = true
 }
 
+// 前往子用户设备列表
+function goDevice(id) {
+  userId.value = id
+  router.push('/device/network')
+}
+
 onMounted(() => {
   getList()
 })
@@ -167,6 +178,15 @@ onMounted(() => {
     </template>
     <template #op="{row}">
       <div class="cursor-pointer text-blue-700">
+        <t-dropdown trigger="click">
+          <a class="mr-4">查看</a>
+          <template #dropdown>
+            <t-dropdown-menu>
+              <t-dropdown-item @click="goDevice(row.id)">设备列表</t-dropdown-item>
+              <t-dropdown-item>用户日志</t-dropdown-item>
+            </t-dropdown-menu>
+          </template>
+        </t-dropdown>
         <a class="mr-4" @click="updateSubUserHandler(row)">编辑</a>
         <a v-show="state===0" @click="subUserDisable(row.id)">禁用</a>
         <a v-show="state===1" @click="subUserEnable(row.id)">启用</a>
