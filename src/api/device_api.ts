@@ -1,16 +1,10 @@
 import request from '@/tools/request'
 
 export class DeviceApi {
-  // 获取设备信息
-  info = (mac: string) => request({
-    method: 'GET',
-    url: `/api/device/device/${mac}`
-  })
-
-  // 获取指定用户设备列表
+  // 获取设备列表
   list = (params) => request({
     method: 'GET',
-    url: '/device/user',
+    url: '/device',
     params
   })
 
@@ -39,6 +33,62 @@ export class DeviceApi {
   enable = (params: object) => request({
     method: 'PUT',
     url: '/device/cancelDelete',
+    params
+  })
+
+  // 获取授权列表
+  authList = (params: object) => request({
+    method: 'GET',
+    url: '/device/user/getAuthorization',
+    params
+  })
+
+  // 添加用户设备使用权
+  authAdd = (params: object) => request({
+    method: 'POST',
+    url: '/device/user',
+    params
+  })
+
+  // 删除用户设备使用权
+  authDelete = (params: object) => request({
+    method: 'DELETE',
+    url: '/device/user',
+    params
+  })
+
+  // 获取使用权设备列表
+  useList = (params) => request({
+    method: 'GET',
+    url: '/device/user',
+    params
+  })
+
+  // 使用权-启用设备
+  authEnable = (params: object) => request({
+    method: 'PUT',
+    url: '/device/user/enableUserDevice',
+    params
+  })
+
+  // 使用权-禁用设备
+  authDisable = (params: object) => request({
+    method: 'PUT',
+    url: '/device/user/disableUserDevice',
+    params
+  })
+
+  // 使用权-修改设备备注
+  authNote = (params: object) => request({
+    method: 'PUT',
+    url: '/device/user',
+    params
+  })
+
+  // 授权设备给用户
+  toUser = (params: object) => request({
+    method: 'POST',
+    url: '/device/user',
     params
   })
 }
