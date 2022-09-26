@@ -14,11 +14,12 @@ const menuList = computed(() => {
 function menuChange(e) {
   router.push(e)
 }
+
 </script>
 
 <template>
   <div id="sidebar">
-    <t-menu :default-value="$route.path" :expanded="menuExpanded" @expand="menuExpanded = $event"
+    <t-menu :default-value="$route.path" v-model:value="$route.path" :expanded="menuExpanded" @expand="menuExpanded = $event"
             @change="menuChange">
       <t-menu-item value="0">
         <template #icon>
