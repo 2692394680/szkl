@@ -36,7 +36,7 @@ export class DeviceApi {
     params
   })
 
-  // 获取授权列表
+  // 获取授权记录列表
   authList = (params: object) => request({
     method: 'GET',
     url: '/device/user/getAuthorization',
