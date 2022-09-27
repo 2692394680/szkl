@@ -10,7 +10,8 @@ const userApi = new UserApi()
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem(TOKEN_NAME) || 'main_token',
-    userinfo: JSON.parse(localStorage.getItem(USERINFO_NAME) || '{}'),
+    userinfo: JSON.parse(sessionStorage.getItem(USERINFO_NAME) || '{}'),
+    // 获取验证码按钮数据
     time: 60,
     timeTrue: true
   }),
@@ -18,11 +19,11 @@ export const useUserStore = defineStore('user', {
     async getUserInfo() {
       const result: any = await userApi.info({ userId: this.userinfo.id, isDelete: 0 }) || {}
       this.userinfo = result.value
-      localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
+      sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo))
     },
     async logout() {
       localStorage.removeItem(TOKEN_NAME)
-      localStorage.removeItem(USERINFO_NAME)
+      sessionStorage.removeItem(USERINFO_NAME)
       this.token = 'main_token'
       this.userinfo = {}
       await router.push('/loginRegister/login')
@@ -33,7 +34,7 @@ export const useUserStore = defineStore('user', {
       this.userinfo = result?.value
       this.token = result?.msg.substring(8)
       localStorage.setItem(TOKEN_NAME, this.token)
-      localStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
+      sessionStorage.setItem(USERINFO_NAME, JSON.stringify(this.userinfo || {}))
       // 记住密码
       if (passwordRepeatChecked) localStorage.setItem('loginForm', JSON.stringify(data))
       else localStorage.removeItem('loginForm')
@@ -76,6 +77,9 @@ export const useUserStore = defineStore('user', {
     // 检查登录
     async isLogin() {
       await userApi.isLogin()
+    },
+    async getSubUserList() {
+
     }
   }
 })
