@@ -95,8 +95,8 @@ function passwordRepeatHandler(userId) {
 // 获取子用户列表
 async function getList() {
   const result: any = await userApi.subList({
-    index: tablePagination.defaultCurrent,
-    dataSize: tablePagination.defaultPageSize,
+    current: tablePagination.defaultCurrent,
+    pageSize: tablePagination.defaultPageSize,
     isDelete: state.value
   })
   subUserList.value = result.value.records
@@ -142,7 +142,7 @@ async function subUserPasswordRepeat(event) {
 // 前往子用户设备列表
 function goDevice(id) {
   userId.value = id
-  router.push('/device/network')
+  router.push('/device/auth')
 }
 
 onMounted(() => {
