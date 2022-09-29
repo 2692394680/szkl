@@ -6,9 +6,12 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { storeToRefs } from 'pinia'
 import { getDeviceStore } from '@/store/modules/device_store'
 import { cloneDeep } from 'lodash'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const deviceApi = new DeviceApi()
-const { deviceList, userId } = storeToRefs(getDeviceStore())
+const deviceList = ref([])
+const { userId, toUserForm } = storeToRefs(getDeviceStore())
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
@@ -31,6 +34,8 @@ const deviceForm = ref({
   brand: '',
   isDelete: 0
 })
+
+const toUserVisible = ref(false)
 const addDeviceRules = {
   name: [{ required: true }],
   sn: [{ required: true }],
@@ -56,12 +61,13 @@ function updateDeviceHandler(row) {
 
 // 获取设备列表
 async function getList() {
-  await getDeviceStore().getDeviceList({
-    dataSize: tablePagination.defaultPageSize,
-    index: tablePagination.defaultCurrent,
+  const result: any = await deviceApi.list({
+    pageSize: tablePagination.defaultPageSize,
+    current: tablePagination.defaultCurrent,
     isDelete: state.value,
     userId: userId.value
   })
+  deviceList.value = result.value.records
   tablePagination.total = deviceList.value.length
 }
 
@@ -112,10 +118,8 @@ onMounted(() => {
           <t-tab-panel :value="0" label="白名单"></t-tab-panel>
           <t-tab-panel :value="1" label="黑名单"></t-tab-panel>
         </t-tabs>
-        <div>
-          <t-tag v-if="userId" closable @close="userTagClose">
-            {{userId}}
-          </t-tag>
+        <div class="text-gray-500">
+          拥有权设备
         </div>
       </div>
       <div>
@@ -134,10 +138,12 @@ onMounted(() => {
             <a class="text-red-600" v-show="state===0">禁用</a>
           </t-popconfirm>
           <a v-show="state===1" @click="enableDevice(row.id)">启用</a>
+          <a class="ml-4" @click="changeToUser(row.id)" v-if="!userId">授权</a>
         </div>
       </template>
     </t-table>
 
+    <!--添加设备-->
     <t-dialog v-model:visible="deviceVisible" :destroyOnClose="true" :footer="false">
       <t-form :data="deviceForm" label-align="left" @submit="changeDevice"
               :rules="addDeviceRules">
@@ -169,6 +175,10 @@ onMounted(() => {
           </div>
         </t-form-item>
       </t-form>
+    </t-dialog>
+
+    <!--授权设备-->
+    <t-dialog v-model:visible="toUserVisible" :destoryOnClose="true" :footer="false">
     </t-dialog>
   </div>
 </template>
