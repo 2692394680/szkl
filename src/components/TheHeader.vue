@@ -36,7 +36,8 @@ export default {
           <t-button class="mr-4" @click="$router.push('/loginRegister/register')">注册</t-button>
         </div>
 
-        <div v-else class="flex justify-between">
+        <div v-else class="flex justify-between items-center">
+          <t-avatar class="mr-2">{{ userinfo.name[0] }}</t-avatar>
           <t-dropdown>
             <p class="mr-4 cursor-pointer">{{ userinfo.name }}</p>
             <template v-slot:dropdown>
