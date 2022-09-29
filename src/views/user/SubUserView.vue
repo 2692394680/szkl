@@ -11,7 +11,11 @@ import { getDeviceStore } from '@/store/modules/device_store'
 import { useRouter } from 'vue-router'
 
 const userApi = new UserApi()
-const { userId } = storeToRefs(getDeviceStore())
+const {
+  userId,
+  toUserForm
+} = storeToRefs(getDeviceStore())
+const deviceStore = getDeviceStore()
 const router = useRouter()
 const subUserList = ref([])
 const tablePagination = reactive({
@@ -22,6 +26,7 @@ const tablePagination = reactive({
 const state = ref(0)
 const subUserVisible = ref(false)
 const passwordRepeatVisible = ref(false)
+const toUserVisible = ref(false)
 const subUserType = ref('添加子用户')
 const subUserForm = ref({
   name: '',
@@ -145,6 +150,23 @@ function goDevice(id) {
   router.push('/device/auth')
 }
 
+// 关闭设备标签
+function deviceTagClose() {
+  toUserForm.value.deviceId = ''
+  getList()
+}
+
+function changeToUser(userId) {
+  toUserForm.value.userId = userId
+  toUserVisible.value = true
+}
+
+function toUserHandle() {
+  deviceStore.toUser()
+  toUserForm.value.note = ''
+  toUserVisible.value = false
+}
+
 onMounted(() => {
   getList()
 })
@@ -157,11 +179,16 @@ onMounted(() => {
   <!--  </div>-->
 
   <div class="flex justify-between mb-4">
-    <div>
+    <div class="flex items-center">
       <t-tabs v-model="state" :default-value="0" @change="getList">
         <t-tab-panel :value="0" label="白名单"></t-tab-panel>
         <t-tab-panel :value="1" label="黑名单"></t-tab-panel>
       </t-tabs>
+      <div>
+        <t-tag v-if="toUserForm.deviceId" closable @close="deviceTagClose">
+          设备ID：{{ toUserForm.deviceId }}
+        </t-tag>
+      </div>
     </div>
     <div>
       <t-button @click="addSubUserHandler">添加子用户</t-button>
@@ -177,7 +204,10 @@ onMounted(() => {
       </div>
     </template>
     <template #op="{row}">
-      <div class="cursor-pointer text-blue-700">
+      <div class="cursor-pointer text-blue-700" v-if="toUserForm.deviceId">
+        <a @click="changeToUser(row.id)">选择</a>
+      </div>
+      <div class="cursor-pointer text-blue-700" v-else>
         <t-dropdown trigger="click">
           <a class="mr-4">查看</a>
           <template #dropdown>
@@ -231,7 +261,7 @@ onMounted(() => {
   </t-dialog>
 
   <!--重置密码-->
-  <t-dialog v-model:visible="passwordRepeatVisible" :destroyOnClose="true" :footer="false">
+  <t-dialog v-model:visible="passwordRepeatVisible" destroyOnClose :footer="false">
     <t-form :data="subUserPasswordRepeatForm" :rules="subUserPasswordRepeatRules"
             @submit="subUserPasswordRepeat">
       <t-form-item labelWidth="0">
@@ -249,6 +279,10 @@ onMounted(() => {
         <t-button type="submit">确定</t-button>
       </t-form-item>
     </t-form>
+  </t-dialog>
+
+  <t-dialog v-model:visible="toUserVisible" destoryOnClose header="此操作会赋予该用户设备使用权" @confirm="toUserHandle">
+    <t-input v-model="toUserForm.note" label="备注：" placeholder="设备备注"></t-input>
   </t-dialog>
 </template>
 

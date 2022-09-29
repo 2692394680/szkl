@@ -93,10 +93,10 @@ async function enableDevice(id) {
   await MessagePlugin.success('启用设备')
 }
 
-// 关闭用户标签
-function userTagClose() {
-  userId.value = ''
-  getList()
+function changeToUser(id) {
+  // toUserVisible.value = true
+  toUserForm.value.deviceId = id
+  router.push('/user/sub-user')
 }
 
 onMounted(() => {
