@@ -35,6 +35,16 @@ export default [{
       name: 'Network',
       component: () => import('@/views/device/NetworkView.vue'),
       meta: { title: '联网设备' }
+    }, {
+      path: 'auth',
+      name: 'Auth',
+      component: () => import('@/views/device/AuthView.vue'),
+      meta: { title: '授权设备' }
+    }, {
+      path: 'record',
+      name: 'Record',
+      component: () => import('@/views/device/RecordView.vue'),
+      meta: { title: '授权记录' }
     }
   ]
 }, {
