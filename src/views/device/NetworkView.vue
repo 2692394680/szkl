@@ -129,7 +129,10 @@ onMounted(() => {
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
           <a class=" mr-4" @click="updateDeviceHandler(row)">编辑</a>
-          <a v-show="state===0" @click="disableDevice(row.id)">禁用</a>
+          <t-popconfirm content="确定禁用吗？该操作会导致该设备失效！" theme="danger"
+                        @confirm="disableDevice(row.id)">
+            <a class="text-red-600" v-show="state===0">禁用</a>
+          </t-popconfirm>
           <a v-show="state===1" @click="enableDevice(row.id)">启用</a>
         </div>
       </template>
