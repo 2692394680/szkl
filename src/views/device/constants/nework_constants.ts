@@ -71,7 +71,7 @@ export const AUTH_TABLE_COLUMNS = [{
   title: '备注'
 }, {
   colKey: 'createById',
-  title: '创建者'
+  title: '创建者ID'
 }, {
   colKey: 'op',
   title: '操作',
@@ -114,8 +114,8 @@ export const RECORD_TABLE_COLUMNS = [{
   title: '备注'
 }, {
   colKey: 'createById',
-  title: '创建者'
+  title: '创建者ID'
 }, {
   colKey: 'useAuthUserId',
-  title: '使用者'
+  title: '使用者ID'
 }]
