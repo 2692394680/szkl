@@ -4,7 +4,6 @@ import LayoutHeader from './componenets/LayoutHeader.vue'
 import LayoutSidebar from './componenets/LayoutSidebar.vue'
 import LayoutContent from './componenets/LayoutContent.vue'
 import LayoutFooter from './componenets/LayoutFooter.vue'
-import React from 'react'
 
 const name = `${prefix}-base-layout`
 export default defineComponent({
