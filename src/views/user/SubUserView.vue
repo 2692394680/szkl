@@ -152,6 +152,7 @@ function goDevice(id) {
 
 // 关闭设备标签
 function deviceTagClose() {
+  router.go(-1)
   toUserForm.value.deviceId = ''
   getList()
 }

@@ -6,7 +6,9 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { storeToRefs } from 'pinia'
 import { getDeviceStore } from '@/store/modules/device_store'
 import { getIndexStore } from '@/store/index_store'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const deviceApi = new DeviceApi()
 const indexStore = getIndexStore()
 const {
@@ -51,6 +53,7 @@ async function enableDevice(id) {
 
 // 关闭用户标签
 function userTagClose() {
+  router.go(-1)
   userId.value = ''
   getList()
 }
