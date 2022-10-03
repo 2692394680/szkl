@@ -5,7 +5,9 @@ import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
+import { getIndexStore } from '@/store/index_store'
 
+const indexStore = getIndexStore()
 const deviceApi = new DeviceApi()
 const { userinfo } = storeToRefs(getUserStore())
 const deviceList = ref<any>([])
@@ -70,6 +72,21 @@ onMounted(() => {
     <t-table row-key="id" :data="deviceList" :columns="RECORD_TABLE_COLUMNS" stripe bordered hover
              table-layout="fixed"
              :pagination="tablePagination">
+      <template #id="{row}">
+        <t-tooltip content="点击复制" theme="light">
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{row.id}}</p>
+        </t-tooltip>
+      </template>
+      <template #createById="{row}">
+        <t-tooltip content="点击复制" theme="light">
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">{{row.createById}}</p>
+        </t-tooltip>
+      </template>
+      <template #useAuthUserId="{row}">
+        <t-tooltip content="点击复制" theme="light">
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">{{row.createById}}</p>
+        </t-tooltip>
+      </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
           <a class="text-red-600" v-show="state===0" @click="disableDevice(row.id)">禁用</a>

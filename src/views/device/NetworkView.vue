@@ -7,8 +7,10 @@ import { storeToRefs } from 'pinia'
 import { getDeviceStore } from '@/store/modules/device_store'
 import { cloneDeep } from 'lodash'
 import { useRouter } from 'vue-router'
+import { getIndexStore } from '@/store/index_store'
 
 const router = useRouter()
+const indexStore = getIndexStore()
 const deviceApi = new DeviceApi()
 const deviceList = ref([])
 const { userId, toUserForm } = storeToRefs(getDeviceStore())
@@ -130,6 +132,11 @@ onMounted(() => {
     <t-table row-key="id" :data="deviceList" :columns="TABLE_COLUMNS" stripe bordered hover
              table-layout="fixed"
              :pagination="tablePagination">
+      <template #id="{row}">
+        <t-tooltip content="点击复制" theme="light">
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{row.id}}</p>
+        </t-tooltip>
+      </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
           <a class=" mr-4" @click="updateDeviceHandler(row)">编辑</a>
