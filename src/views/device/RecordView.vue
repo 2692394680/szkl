@@ -40,18 +40,11 @@ async function getList() {
   tablePagination.total = deviceList.value.length
 }
 
-// 禁用设备
-async function disableDevice(id) {
-  await deviceApi.authDisable({ deviceId: id })
+// 删除设备授权
+async function deleteAuth(deviceId, userId) {
+  await deviceApi.authDelete({ deviceId, userId })
+  await MessagePlugin.success('删除授权成功')
   await getList()
-  await MessagePlugin.success('禁用设备')
-}
-
-// 启用设备
-async function enableDevice(id) {
-  await deviceApi.authEnable({ deviceId: id })
-  await getList()
-  await MessagePlugin.success('启用设备')
 }
 
 // 关闭设备标签
@@ -71,10 +64,6 @@ onMounted(() => {
   <div>
     <div class="flex justify-between mb-4">
       <div class="flex items-center">
-        <t-tabs v-model="state" :default-value="0" @change="getList" class="mr-4">
-          <t-tab-panel :value="0" label="白名单"></t-tab-panel>
-          <t-tab-panel :value="1" label="黑名单"></t-tab-panel>
-        </t-tabs>
         <div class="text-gray-500 mr-4">
           设备授权记录
         </div>
@@ -106,8 +95,10 @@ onMounted(() => {
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
-          <a class="text-red-600" v-show="state===0" @click="disableDevice(row.id)">禁用</a>
-          <a v-show="state===1" @click="enableDevice(row.id)">启用</a>
+          <t-popconfirm content="确定删除吗？该操作会导致该授权失效！" theme="danger"
+                        @confirm="deleteAuth(row.id,row.useAuthUserId)">
+            <a class="text-red-600 mr-4">删除</a>
+          </t-popconfirm>
         </div>
       </template>
     </t-table>

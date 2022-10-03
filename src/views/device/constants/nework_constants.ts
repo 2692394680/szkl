@@ -118,4 +118,13 @@ export const RECORD_TABLE_COLUMNS = [{
 }, {
   colKey: 'useAuthUserId',
   title: '使用者ID'
+}, {
+  colKey: 'op',
+  title: '操作',
+  /**
+   * 1.内容超出时，是否显示省略号。值为 true，则浮层默认显示单元格内容；
+   * 2.值类型为 Function 则自定义浮层显示内容；
+   * 3.值类型为 Object，则自动透传属性到 Popup 组件。
+   */
+  ellipsis: true
 }]
