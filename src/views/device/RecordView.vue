@@ -6,7 +6,10 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
 import { getIndexStore } from '@/store/index_store'
+import { useRoute, useRouter } from 'vue-router'
 
+const route = useRoute()
+const router = useRouter()
 const indexStore = getIndexStore()
 const deviceApi = new DeviceApi()
 const { userinfo } = storeToRefs(getUserStore())
@@ -25,7 +28,8 @@ async function getList() {
   const result: any = await deviceApi.authList({
     pageSize: tablePagination.defaultPageSize,
     current: tablePagination.defaultCurrent,
-    isDelete: state.value
+    isDelete: state.value,
+    deviceId: route.query.id
   })
   deviceList.value = result.value.records
   deviceList.value = deviceList.value.filter(item => item.user.id !== userinfo.value.id)
@@ -50,6 +54,14 @@ async function enableDevice(id) {
   await MessagePlugin.success('启用设备')
 }
 
+// 关闭设备标签
+function userTagClose() {
+  // router.push('/device/record')
+  router.go(-1)
+  route.query.id = ''
+  getList()
+}
+
 onMounted(() => {
   getList()
 })
@@ -65,6 +77,11 @@ onMounted(() => {
         </t-tabs>
         <div class="text-gray-500 mr-4">
           设备授权记录
+        </div>
+        <div>
+          <t-tag v-if="route.query.id" closable @close="userTagClose">
+            设备ID：{{ route.query.id }}
+          </t-tag>
         </div>
       </div>
     </div>

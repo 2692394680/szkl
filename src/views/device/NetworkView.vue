@@ -107,6 +107,10 @@ function changeToUser(id) {
   router.push('/user/sub-user')
 }
 
+function changeToRecord(id) {
+  router.push('/device/record?id=' + id)
+}
+
 onMounted(() => {
   getList()
 })
@@ -142,10 +146,11 @@ onMounted(() => {
           <a class=" mr-4" @click="updateDeviceHandler(row)">编辑</a>
           <t-popconfirm content="确定禁用吗？该操作会导致该设备失效！" theme="danger"
                         @confirm="disableDevice(row.id)">
-            <a class="text-red-600" v-show="state===0">禁用</a>
+            <a class="text-red-600 mr-4" v-show="state===0">禁用</a>
           </t-popconfirm>
           <a v-show="state===1" @click="enableDevice(row.id)">启用</a>
-          <a class="ml-4" @click="changeToUser(row.id)" v-if="!userId">授权</a>
+          <a class="mr-4" @click="changeToUser(row.id)" v-if="!userId">授权</a>
+          <a @click="changeToRecord(row.id)">记录</a>
         </div>
       </template>
     </t-table>
