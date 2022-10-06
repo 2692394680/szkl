@@ -144,7 +144,7 @@ onMounted(() => {
             <a class="text-red-600 mr-4" v-show="state===0">禁用</a>
           </t-popconfirm>
           <a class="mr-4" v-show="state===1" @click="enableDevice(row.id)">启用</a>
-          <a class="mr-4" @click="changeToUser(row.id)" v-if="!userId">授权</a>
+          <a class="mr-4" @click="changeToUser(row.id)">授权</a>
           <a @click="changeToRecord(row.id)">记录</a>
         </div>
       </template>
