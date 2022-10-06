@@ -3,23 +3,26 @@ import { AUTH_TABLE_COLUMNS } from '@/views/device/constants/nework_constants'
 import { onMounted, reactive, ref } from 'vue'
 import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { storeToRefs } from 'pinia'
-import { getDeviceStore } from '@/store/modules/device_store'
 import { getIndexStore } from '@/store/index_store'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
+const route = useRoute()
 const router = useRouter()
 const deviceApi = new DeviceApi()
 const indexStore = getIndexStore()
-const {
-  userId
-} = storeToRefs(getDeviceStore())
 const deviceList = ref<any>([])
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
   total: 0
 })
+const authNoteForm = reactive({
+  deviceId: '',
+  userId: '',
+  note: ''
+})
+const authNoteVisible = ref(false)
+const userId = ref('')
 
 // 黑白名单状态
 const state = ref(0)
@@ -30,7 +33,7 @@ async function getList() {
     pageSize: tablePagination.defaultPageSize,
     current: tablePagination.defaultCurrent,
     isDelete: state.value,
-    userId: userId.value
+    userId: route.query.id
   })
   deviceList.value = result.value.records
   // deviceList.value = deviceList.value.filter(item => item.createById !== userinfo.value.id)
@@ -56,6 +59,20 @@ function userTagClose() {
   router.go(-1)
   userId.value = ''
   getList()
+}
+
+function authNoteHandler(deviceId, userId) {
+  authNoteVisible.value = true
+  authNoteForm.deviceId = deviceId
+  authNoteForm.userId = userId
+}
+
+// 修改设备备注
+async function authNoteEdit() {
+  await deviceApi.authNote(authNoteForm)
+  await MessagePlugin.success('备注修改成功')
+  await getList()
+  authNoteVisible.value = false
 }
 
 onMounted(() => {
@@ -87,22 +104,28 @@ onMounted(() => {
              :pagination="tablePagination">
       <template #id="{row}">
         <t-tooltip content="点击复制" theme="light">
-          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{row.id}}</p>
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{ row.id }}</p>
         </t-tooltip>
       </template>
       <template #createById="{row}">
         <t-tooltip content="点击复制" theme="light">
-          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">{{row.createById}}</p>
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">
+            {{ row.createById }}</p>
         </t-tooltip>
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
+          <a class="mr-4" @click="authNoteHandler(row.id,row.createById)">修改</a>
           <a class="text-red-600" v-show="state===0" @click="disableDevice(row.id)">禁用</a>
           <a v-show="state===1" @click="enableDevice(row.id)">启用</a>
         </div>
       </template>
     </t-table>
 
+    <!--编辑设备-->
+    <t-dialog v-model:visible="authNoteVisible" destoryOnClose header="修改备注" @confirm="authNoteEdit">
+      <t-input v-model="authNoteForm.note" label="备注：" placeholder="设备备注"></t-input>
+    </t-dialog>
   </div>
 </template>
 
