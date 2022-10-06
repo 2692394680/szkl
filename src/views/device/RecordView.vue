@@ -90,7 +90,7 @@ onMounted(() => {
       </template>
       <template #useAuthUserId="{row}">
         <t-tooltip content="点击复制" theme="light">
-          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">{{row.createById}}</p>
+          <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.useAuthUserId)">{{row.useAuthUserId}}</p>
         </t-tooltip>
       </template>
       <template #op="{row}">
