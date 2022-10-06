@@ -6,17 +6,13 @@ import { REGISTER_RULES } from '@/views/user/constants/rules_constants'
 import { UserApi } from '@/api/user_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { cloneDeep } from 'lodash'
-import { storeToRefs } from 'pinia'
-import { getDeviceStore } from '@/store/modules/device_store'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { DeviceApi } from '@/api/device_api'
 
 const userApi = new UserApi()
-const {
-  userId,
-  toUserForm
-} = storeToRefs(getDeviceStore())
-const deviceStore = getDeviceStore()
+const deviceApi = new DeviceApi()
 const router = useRouter()
+const route = useRoute()
 const subUserList = ref([])
 const tablePagination = reactive({
   defaultCurrent: 1,
@@ -34,6 +30,12 @@ const subUserForm = ref({
   password: '',
   passwordRepeat: '',
   email: '',
+  note: ''
+})
+// 授权设备表单
+const toUserForm = reactive({
+  deviceId: '',
+  userId: '',
   note: ''
 })
 const subUserPasswordRepeatForm = reactive({
@@ -122,18 +124,18 @@ async function changeSubUser(event) {
   subUserVisible.value = false
 }
 
-// 禁用设备
+// 禁用用户
 async function subUserDisable(id) {
   await userApi.subDisable({ userId: id })
   await getList()
-  await MessagePlugin.success('禁用设备')
+  await MessagePlugin.success('禁用用户')
 }
 
-// 启用设备
+// 启用用户
 async function subUserEnable(id) {
   await userApi.subEnable({ userId: id })
   await getList()
-  await MessagePlugin.success('启用设备')
+  await MessagePlugin.success('启用用户')
 }
 
 // 重置子用户密码
@@ -146,30 +148,37 @@ async function subUserPasswordRepeat(event) {
 
 // 前往子用户设备列表
 function goDevice(id) {
-  userId.value = id
-  router.push('/device/auth')
+  router.push('/device/auth?id=' + id)
 }
 
 // 关闭设备标签
 function deviceTagClose() {
   router.go(-1)
-  toUserForm.value.deviceId = ''
+  toUserForm.deviceId = ''
   getList()
 }
 
 function changeToUser(userId) {
-  toUserForm.value.userId = userId
+  toUserForm.userId = userId
   toUserVisible.value = true
 }
 
 function toUserHandle() {
-  deviceStore.toUser()
-  toUserForm.value.note = ''
+  toUser()
+  toUserForm.note = ''
   toUserVisible.value = false
+}
+
+// 授权设备给用户
+async function toUser() {
+  if (!toUserForm.note) toUserForm.note = '备注'
+  await deviceApi.toUser(toUserForm)
+  await MessagePlugin.success('授权成功')
 }
 
 onMounted(() => {
   getList()
+  toUserForm.deviceId = route.query.id + ''
 })
 </script>
 

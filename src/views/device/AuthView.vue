@@ -5,9 +5,12 @@ import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { getIndexStore } from '@/store/index_store'
 import { useRoute, useRouter } from 'vue-router'
+import { storeToRefs } from 'pinia'
+import { getUserStore } from '@/store/modules/user_store'
 
 const route = useRoute()
 const router = useRouter()
+const { userinfo } = storeToRefs(getUserStore())
 const deviceApi = new DeviceApi()
 const indexStore = getIndexStore()
 const deviceList = ref<any>([])
@@ -22,7 +25,7 @@ const authNoteForm = reactive({
   note: ''
 })
 const authNoteVisible = ref(false)
-const userId = ref('')
+const userId = ref()
 
 // 黑白名单状态
 const state = ref(0)
@@ -33,10 +36,10 @@ async function getList() {
     pageSize: tablePagination.defaultPageSize,
     current: tablePagination.defaultCurrent,
     isDelete: state.value,
-    userId: route.query.id
+    userId: userId.value
   })
   deviceList.value = result.value.records
-  // deviceList.value = deviceList.value.filter(item => item.createById !== userinfo.value.id)
+  deviceList.value = deviceList.value.filter(item => item.createById !== userinfo.value.id)
   tablePagination.total = deviceList.value.length
 }
 
@@ -76,6 +79,7 @@ async function authNoteEdit() {
 }
 
 onMounted(() => {
+  userId.value = route.query.id || ''
   getList()
 })
 </script>

@@ -3,8 +3,6 @@ import { TABLE_COLUMNS } from '@/views/device/constants/nework_constants'
 import { onMounted, reactive, ref } from 'vue'
 import { DeviceApi } from '@/api/device_api'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { storeToRefs } from 'pinia'
-import { getDeviceStore } from '@/store/modules/device_store'
 import { cloneDeep } from 'lodash'
 import { useRouter } from 'vue-router'
 import { getIndexStore } from '@/store/index_store'
@@ -13,7 +11,6 @@ const router = useRouter()
 const indexStore = getIndexStore()
 const deviceApi = new DeviceApi()
 const deviceList = ref([])
-const { userId, toUserForm } = storeToRefs(getDeviceStore())
 const tablePagination = reactive({
   defaultCurrent: 1,
   defaultPageSize: 8,
@@ -66,8 +63,7 @@ async function getList() {
   const result: any = await deviceApi.list({
     pageSize: tablePagination.defaultPageSize,
     current: tablePagination.defaultCurrent,
-    isDelete: state.value,
-    userId: userId.value
+    isDelete: state.value
   })
   deviceList.value = result.value.records
   tablePagination.total = deviceList.value.length
@@ -103,8 +99,7 @@ async function enableDevice(id) {
 
 function changeToUser(id) {
   // toUserVisible.value = true
-  toUserForm.value.deviceId = id
-  router.push('/user/sub-user')
+  router.push('/user/sub-user?id=' + id)
 }
 
 function changeToRecord(id) {
