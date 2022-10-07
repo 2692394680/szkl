@@ -25,7 +25,7 @@ const authNoteForm = reactive({
   note: ''
 })
 const authNoteVisible = ref(false)
-const userId = ref()
+const userId = ref('')
 
 // 黑白名单状态
 const state = ref(0)
@@ -64,6 +64,7 @@ function userTagClose() {
   getList()
 }
 
+// 修改设备备注回调
 function authNoteHandler(deviceId, userId) {
   authNoteVisible.value = true
   authNoteForm.deviceId = deviceId
@@ -79,7 +80,7 @@ async function authNoteEdit() {
 }
 
 onMounted(() => {
-  userId.value = route.query.id || ''
+  if (route.query.id) userId.value = route.query.id + ''
   getList()
 })
 </script>
