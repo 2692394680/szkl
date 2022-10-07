@@ -177,8 +177,8 @@ async function toUser() {
 }
 
 onMounted(() => {
+  if (route.query.id) toUserForm.deviceId = route.query.id + ''
   getList()
-  toUserForm.deviceId = route.query.id + ''
 })
 </script>
 
