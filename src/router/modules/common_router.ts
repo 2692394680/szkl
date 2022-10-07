@@ -44,7 +44,7 @@ export default [{
       path: 'record',
       name: 'Record',
       component: () => import('@/views/device/RecordView.vue'),
-      meta: { title: '设备授权' }
+      meta: { title: '授权记录' }
     }
   ]
 }, {
