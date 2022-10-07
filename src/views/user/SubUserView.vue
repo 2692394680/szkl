@@ -38,7 +38,7 @@ const toUserForm = reactive({
   userId: '',
   note: ''
 })
-const subUserPasswordRepeatForm = reactive({
+const subUserPasswordResetForm = reactive({
   password: '',
   passwordRepeat: '',
   userId: ''
@@ -54,7 +54,7 @@ const subUserRules = Object.assign(REGISTER_RULES, {
     type: 'error'
   }]
 })
-const subUserPasswordRepeatRules = {
+const subUserPasswordResetRules = {
   password: [{
     required: true,
     message: '密码不能为空',
@@ -72,7 +72,7 @@ const subUserPasswordRepeatRules = {
     message: '重复密码不能为空',
     type: 'error'
   }, {
-    validator: (val) => val === subUserPasswordRepeatForm.password,
+    validator: (val) => val === subUserPasswordResetForm.password,
     message: '两次密码不相同',
     type: 'error'
   }]
@@ -94,9 +94,9 @@ function updateSubUserHandler(row) {
 }
 
 // 重置密码回调
-function passwordRepeatHandler(userId) {
+function passwordResetHandler(userId) {
   passwordRepeatVisible.value = true
-  subUserPasswordRepeatForm.userId = userId
+  subUserPasswordResetForm.userId = userId
 }
 
 // 获取子用户列表
@@ -139,11 +139,11 @@ async function subUserEnable(id) {
 }
 
 // 重置子用户密码
-async function subUserPasswordRepeat(event) {
+async function subUserPasswordReset(event) {
   if (typeof event.validateResult === 'object') return
-  await userApi.subPasswordRepeat(subUserPasswordRepeatForm)
+  await userApi.subPasswordReset(subUserPasswordResetForm)
   await MessagePlugin.success('重置密码成功')
-  passwordRepeatVisible.value = true
+  passwordRepeatVisible.value = false
 }
 
 // 前往子用户设备列表
@@ -230,7 +230,7 @@ onMounted(() => {
         <a class="mr-4" @click="updateSubUserHandler(row)">编辑</a>
         <a v-show="state===0" @click="subUserDisable(row.id)">禁用</a>
         <a v-show="state===1" @click="subUserEnable(row.id)">启用</a>
-        <a class="ml-4" @click="passwordRepeatHandler(row.id)">重置密码</a>
+        <a class="ml-4" @click="passwordResetHandler(row.id)">重置密码</a>
       </div>
     </template>
   </t-table>
@@ -272,18 +272,18 @@ onMounted(() => {
 
   <!--重置密码-->
   <t-dialog v-model:visible="passwordRepeatVisible" destroyOnClose :footer="false">
-    <t-form :data="subUserPasswordRepeatForm" :rules="subUserPasswordRepeatRules"
-            @submit="subUserPasswordRepeat">
+    <t-form :data="subUserPasswordResetForm" :rules="subUserPasswordResetRules"
+            @submit="subUserPasswordReset">
       <t-form-item labelWidth="0">
         <div class="text-2xl">重置密码</div>
       </t-form-item>
       <t-form-item label="密码" name="password">
         <t-input placeholder="请输入密码" type="password" size="large"
-                 v-model="subUserPasswordRepeatForm.password"></t-input>
+                 v-model="subUserPasswordResetForm.password"></t-input>
       </t-form-item>
       <t-form-item label="确认密码" name="passwordRepeat">
         <t-input placeholder="请再次输入密码" type="password" size="large"
-                 v-model="subUserPasswordRepeatForm.passwordRepeat"></t-input>
+                 v-model="subUserPasswordResetForm.passwordRepeat"></t-input>
       </t-form-item>
       <t-form-item>
         <t-button type="submit">确定</t-button>
