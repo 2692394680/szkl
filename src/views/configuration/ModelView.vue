@@ -46,7 +46,7 @@ const getList = async() => {
   tablePagination.total = tableData.value.length
 }
 
-// 添加模型组态
+// 上传模型组态
 const addModel = async(event) => {
   if (typeof event.validateResult === 'object') return
   const file = new File([JSON.stringify([{}])], addModelForm.name + '.json', {
@@ -57,7 +57,7 @@ const addModel = async(event) => {
   formData.append('model', file)
   const result: any = await configurationApi.add(addModelForm, formData)
   console.log(result)
-  await router.push('Design')
+  // await router.push('Design')
 }
 
 // 打开新增组态对话框
@@ -67,7 +67,7 @@ function openModelDialog() {
 }
 
 onMounted(() => {
-  // getList()
+  getList()
 })
 </script>
 
@@ -87,7 +87,7 @@ onMounted(() => {
     </div>
 
     <t-table row-key="moduleId" :data="tableData" :columns="TABLE_COLUMNS" stripe bordered hover
-             table-layout="fixed"
+             table-layout="auto"
              :pagination="tablePagination">
       <template #createTime="{row}">
         {{ moment(row.createTime).format() }}

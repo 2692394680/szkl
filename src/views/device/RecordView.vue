@@ -7,6 +7,7 @@ import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
 import { getIndexStore } from '@/store/index_store'
 import { useRoute, useRouter } from 'vue-router'
+import moment from 'moment'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,6 +20,7 @@ const tablePagination = reactive({
   defaultPageSize: 8,
   total: 0
 })
+const sort = reactive({ sortBy: 'createTime', descending: false })
 
 // 黑白名单状态
 const state = ref(0)
@@ -29,7 +31,8 @@ async function getList() {
     pageSize: tablePagination.defaultPageSize,
     current: tablePagination.defaultCurrent,
     isDelete: state.value,
-    deviceId: route.query.id
+    deviceId: route.query.id,
+    sort: sort.descending
   })
   deviceList.value = result.value.records
   deviceList.value = deviceList.value.filter(item => item.user.id !== userinfo.value.id)
@@ -55,6 +58,11 @@ function userTagClose() {
   getList()
 }
 
+function sortChange() {
+  sort.descending = !sort.descending
+  getList()
+}
+
 onMounted(() => {
   getList()
 })
@@ -76,8 +84,7 @@ onMounted(() => {
     </div>
 
     <t-table row-key="id" :data="deviceList" :columns="RECORD_TABLE_COLUMNS" stripe bordered hover
-             table-layout="fixed"
-             :pagination="tablePagination">
+             table-layout="auto" :pagination="tablePagination" :sort="sort" @sortChange="sortChange">
       <template #id="{row}">
         <t-tooltip content="点击复制" theme="light">
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{row.id}}</p>
@@ -92,6 +99,11 @@ onMounted(() => {
         <t-tooltip content="点击复制" theme="light">
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.useAuthUserId)">{{row.useAuthUserId}}</p>
         </t-tooltip>
+      </template>
+      <template #createTime="{row}">
+        {{
+          moment(row.createTime).format('YYYY-MM-DD HH:mm:ss')
+        }}
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">

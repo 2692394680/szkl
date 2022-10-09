@@ -6,6 +6,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { cloneDeep } from 'lodash'
 import { useRouter } from 'vue-router'
 import { getIndexStore } from '@/store/index_store'
+import moment from 'moment'
 
 const router = useRouter()
 const indexStore = getIndexStore()
@@ -16,6 +17,7 @@ const tablePagination = reactive({
   defaultPageSize: 8,
   total: 0
 })
+const sort = reactive({ sortBy: 'createTime', descending: false })
 
 // 黑白名单状态
 const state = ref(0)
@@ -63,7 +65,8 @@ async function getList() {
   const result: any = await deviceApi.list({
     pageSize: tablePagination.defaultPageSize,
     current: tablePagination.defaultCurrent,
-    isDelete: state.value
+    isDelete: state.value,
+    sort: sort.descending
   })
   deviceList.value = result.value.records
   tablePagination.total = deviceList.value.length
@@ -106,7 +109,13 @@ function changeToRecord(id) {
   router.push('/device/record?id=' + id)
 }
 
+function sortChange() {
+  sort.descending = !sort.descending
+  getList()
+}
+
 onMounted(() => {
+  moment.locale('zh-CN')
   getList()
 })
 </script>
@@ -129,12 +138,17 @@ onMounted(() => {
     </div>
 
     <t-table row-key="id" :data="deviceList" :columns="TABLE_COLUMNS" stripe bordered hover
-             table-layout="fixed"
-             :pagination="tablePagination">
+             table-layout="auto" :sort="sort"
+             :pagination="tablePagination" @sortChange="sortChange">
       <template #id="{row}">
         <t-tooltip content="点击复制" theme="light">
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{row.id}}</p>
         </t-tooltip>
+      </template>
+      <template #createTime="{row}">
+        {{
+          moment(row.createTime).format('YYYY-MM-DD HH:mm:ss')
+        }}
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">

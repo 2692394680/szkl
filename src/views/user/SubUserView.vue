@@ -8,6 +8,7 @@ import { MessagePlugin } from 'tdesign-vue-next'
 import { cloneDeep } from 'lodash'
 import { useRoute, useRouter } from 'vue-router'
 import { DeviceApi } from '@/api/device_api'
+import moment from 'moment'
 
 const userApi = new UserApi()
 const deviceApi = new DeviceApi()
@@ -19,6 +20,8 @@ const tablePagination = reactive({
   defaultPageSize: 8,
   total: 0
 })
+const sort = reactive({ sortBy: 'createTime', descending: false })
+
 const state = ref(0)
 const subUserVisible = ref(false)
 const passwordRepeatVisible = ref(false)
@@ -104,7 +107,8 @@ async function getList() {
   const result: any = await userApi.subList({
     current: tablePagination.defaultCurrent,
     pageSize: tablePagination.defaultPageSize,
-    isDelete: state.value
+    isDelete: state.value,
+    sort: sort.descending
   })
   subUserList.value = result.value.records
   tablePagination.total = subUserList.value.length
@@ -176,6 +180,11 @@ async function toUser() {
   await MessagePlugin.success('授权成功')
 }
 
+function sortChange() {
+  sort.descending = !sort.descending
+  getList()
+}
+
 onMounted(() => {
   if (route.query.id) toUserForm.deviceId = route.query.id + ''
   getList()
@@ -205,13 +214,12 @@ onMounted(() => {
     </div>
   </div>
 
-  <t-table row-key="id" :columns="TABLE_COLUMNS" stripe bordered hover
-           table-layout="fixed" :data="subUserList"
-           :pagination="tablePagination">
+  <t-table row-key="id" :data="subUserList" :columns="TABLE_COLUMNS" stripe bordered hover
+           table-layout="auto" :pagination="tablePagination" :sort="sort" @sortChange="sortChange">
     <template #createTime="{row}">
-      <div>
-        {{ row.createTime }}
-      </div>
+      {{
+        moment(row.createTime).format('YYYY-MM-DD HH:mm:ss')
+      }}
     </template>
     <template #op="{row}">
       <div class="cursor-pointer text-blue-700" v-if="toUserForm.deviceId">

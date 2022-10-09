@@ -23,6 +23,11 @@ export const TABLE_COLUMNS = [
     colKey: 'note',
     title: '备注'
   }, {
+    colKey: 'createTime',
+    title: '创建时间',
+    sortType: 'all',
+    sorter: true
+  }, {
     width: 250,
     colKey: 'op',
     title: '操作',

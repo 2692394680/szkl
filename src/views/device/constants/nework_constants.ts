@@ -29,6 +29,11 @@ export const TABLE_COLUMNS = [
     colKey: 'note',
     title: '备注'
   }, {
+    colKey: 'createTime',
+    title: '创建时间',
+    sortType: 'all',
+    sorter: true
+  }, {
     colKey: 'op',
     title: '操作',
     /**
@@ -72,6 +77,11 @@ export const AUTH_TABLE_COLUMNS = [{
 }, {
   colKey: 'createById',
   title: '创建者ID'
+}, {
+  colKey: 'createTime',
+  title: '创建时间',
+  sortType: 'all',
+  sorter: true
 }, {
   colKey: 'op',
   title: '操作',
@@ -118,6 +128,11 @@ export const RECORD_TABLE_COLUMNS = [{
 }, {
   colKey: 'useAuthUserId',
   title: '使用者ID'
+}, {
+  colKey: 'createTime',
+  title: '创建时间',
+  sortType: 'all',
+  sorter: true
 }, {
   colKey: 'op',
   title: '操作',

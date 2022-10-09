@@ -1,14 +1,14 @@
 import request from '@/tools/request'
 
 export class ConfigurationApi {
-  // 获取组态模板列表
+  // 获取组态列表
   list = (params) => request({
     method: 'GET',
     url: '/model',
     params
   })
 
-  // 上传组态模板
+  // 上传组态
   add = (params, data) => request({
     method: 'POST',
     url: '/model',

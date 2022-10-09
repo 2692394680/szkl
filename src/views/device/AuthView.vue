@@ -7,6 +7,7 @@ import { getIndexStore } from '@/store/index_store'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
+import moment from 'moment'
 
 const route = useRoute()
 const router = useRouter()
@@ -19,6 +20,8 @@ const tablePagination = reactive({
   defaultPageSize: 8,
   total: 0
 })
+const sort = reactive({ sortBy: 'createTime', descending: false })
+
 const authNoteForm = reactive({
   deviceId: '',
   userId: '',
@@ -79,6 +82,11 @@ async function authNoteEdit() {
   authNoteVisible.value = false
 }
 
+function sortChange() {
+  sort.descending = !sort.descending
+  getList()
+}
+
 onMounted(() => {
   if (route.query.id) userId.value = route.query.id + ''
   getList()
@@ -105,8 +113,7 @@ onMounted(() => {
     </div>
 
     <t-table row-key="id" :data="deviceList" :columns="AUTH_TABLE_COLUMNS" stripe bordered hover
-             table-layout="fixed"
-             :pagination="tablePagination">
+             table-layout="auto" :pagination="tablePagination" :sort="sort" @sortChange="sortChange">
       <template #id="{row}">
         <t-tooltip content="点击复制" theme="light">
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{ row.id }}</p>
@@ -117,6 +124,11 @@ onMounted(() => {
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">
             {{ row.createById }}</p>
         </t-tooltip>
+      </template>
+      <template #createTime="{row}">
+        {{
+          moment(row.createTime).format('YYYY-MM-DD HH:mm:ss')
+        }}
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
