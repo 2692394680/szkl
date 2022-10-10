@@ -34,6 +34,7 @@ const addModelRules = {
 }
 // 黑白名单状态
 const state = ref(0)
+const sort = reactive({ sortBy: 'createTime', descending: false })
 
 // 获取模型组态列表
 const getList = async() => {
@@ -87,10 +88,9 @@ onMounted(() => {
     </div>
 
     <t-table row-key="moduleId" :data="tableData" :columns="TABLE_COLUMNS" stripe bordered hover
-             table-layout="auto"
-             :pagination="tablePagination">
+             table-layout="auto" :pagination="tablePagination" :sort="sort" @sortChange="sortChange">
       <template #createTime="{row}">
-        {{ moment(row.createTime).format() }}
+        {{ formatDate(row.createTime)}}
       </template>
       <template #op>
         <div class="cursor-pointer text-blue-700">

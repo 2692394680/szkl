@@ -31,9 +31,10 @@ export const TABLE_COLUMNS = [
   // },
   {
     colKey: 'createTime',
-    title: '创建时间'
-  },
-  {
+    title: '创建时间',
+    sortType: 'all',
+    sorter: true
+  }, {
     colKey: 'op',
     title: '操作',
     /**

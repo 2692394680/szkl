@@ -7,7 +7,6 @@ import { getIndexStore } from '@/store/index_store'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
-import moment from 'moment'
 
 const route = useRoute()
 const router = useRouter()
@@ -126,9 +125,7 @@ onMounted(() => {
         </t-tooltip>
       </template>
       <template #createTime="{row}">
-        {{
-          moment(row.createTime).format('YYYY-MM-DD HH:mm:ss')
-        }}
+        {{ formatDate(row.createTime)}}
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">

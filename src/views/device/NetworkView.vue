@@ -146,9 +146,7 @@ onMounted(() => {
         </t-tooltip>
       </template>
       <template #createTime="{row}">
-        {{
-          moment(row.createTime).format('YYYY-MM-DD HH:mm:ss')
-        }}
+        {{ formatDate(row.createTime)}}
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
