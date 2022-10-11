@@ -7,6 +7,7 @@ import { getIndexStore } from '@/store/index_store'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
+import request from '@/tools/request'
 
 const route = useRoute()
 const router = useRouter()

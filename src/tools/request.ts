@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 import nprogress from 'nprogress'
 import { MessagePlugin } from 'tdesign-vue-next'
-import { TOKEN_NAME } from '@/config/global'
+import { TOKEN_NAME, BASE_URL } from '@/config/global'
 import { getUserStore } from '@/store/modules/user_store'
 
 const request = axios.create({
-  baseURL: 'http://sub.co4.top:8080',
+  baseURL: BASE_URL,
   timeout: 5000
 })
 

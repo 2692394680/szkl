@@ -4,7 +4,7 @@ export class ConfigurationApi {
   // 获取组态列表
   list = (params) => request({
     method: 'GET',
-    url: '/model',
+    url: '/model/list',
     params
   })
 
@@ -28,5 +28,19 @@ export class ConfigurationApi {
   detail = (url) => request({
     method: 'GET',
     url
+  })
+
+  // 上传图片
+  addImage = (data) => request({
+    url: '/model/image',
+    method: 'POST',
+    data
+  })
+
+  // 删除图片
+  deleteImage = (params) => request({
+    url: '/model/image',
+    method: 'DELETE',
+    params
   })
 }
