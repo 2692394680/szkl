@@ -46,15 +46,15 @@ const addDeviceRules = {
   note: [{ required: true }]
 }
 
-// 添加设备回调
-function addDeviceHandler() {
+// 添加设备按钮回调
+function addDeviceDialog() {
   Object.keys(deviceForm.value).forEach(key => (deviceForm.value[key] = ''))
   deviceVisible.value = true
   deviceType.value = '添加设备'
 }
 
-// 编辑设备回调
-function updateDeviceHandler(row) {
+// 编辑设备按钮回调
+function updateDeviceDialog(row) {
   deviceForm.value = cloneDeep(row)
   deviceVisible.value = true
   deviceType.value = '编辑设备'
@@ -133,7 +133,7 @@ onMounted(() => {
         </div>
       </div>
       <div>
-        <t-button @click="addDeviceHandler">添加设备</t-button>
+        <t-button @click="addDeviceDialog">添加设备</t-button>
       </div>
     </div>
 
@@ -150,7 +150,7 @@ onMounted(() => {
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
-          <a class=" mr-4" @click="updateDeviceHandler(row)">编辑</a>
+          <a class=" mr-4" @click="updateDeviceDialog(row)">编辑</a>
           <t-popconfirm content="确定禁用吗？该操作会导致该设备失效！" theme="danger"
                         @confirm="disableDevice(row.id)">
             <a class="text-red-600 mr-4" v-show="state===0">禁用</a>
