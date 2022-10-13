@@ -9,7 +9,8 @@ import { useRouter } from 'vue-router'
 const userStore = getUserStore()
 const {
   time,
-  timeTrue
+  timeTrue,
+  userinfo
 } = storeToRefs(getUserStore())
 const userApi = new UserApi()
 const router = useRouter()
@@ -20,11 +21,6 @@ const passwordResetForm = reactive({
   code: ''
 })
 const passwordResetRules = reactive({
-  phone: [{
-    required: true,
-    message: '账号不能为空',
-    type: 'error'
-  }],
   password: [{
     required: true,
     message: '密码不能为空',
@@ -50,7 +46,8 @@ const passwordResetRules = reactive({
 
 async function passwordReset(event) {
   if (typeof event.validateResult === 'object') return
-  userApi.passwordReset(passwordResetForm)
+  passwordResetForm.phone = userinfo.value.phone
+  await userApi.passwordReset(passwordResetForm)
   await MessagePlugin.success('重置密码成功，请登录')
   await router.push('/loginRegister/login')
 }
@@ -73,17 +70,17 @@ async function passwordReset(event) {
         <t-input placeholder="请再次输入新密码" type="password" size="large"
                  v-model="passwordResetForm.passwordRepeat"></t-input>
       </t-form-item>
-      <t-form-item labelWidth="0" name="phone">
-        <t-input placeholder="请输入手机号" size="large" v-model="passwordResetForm.phone"></t-input>
-      </t-form-item>
-      <t-form-item labelWidth="0" name="code">
+<!--      <t-form-item labelWidth="0" name="phone">-->
+<!--        <t-input placeholder="请输入手机号" size="large" v-model="passwordResetForm.phone"></t-input>-->
+<!--      </t-form-item>-->
+      <t-form-item labelWidth="0" name="code" :help="`通过手机号${userinfo.phone}获取验证码`">
         <t-input class="mr-3" placeholder="请输入验证码" size="large" v-model="passwordResetForm.code"></t-input>
-        <t-button size="large" @click="userStore.getCode(passwordResetForm.phone,'password')"
+        <t-button size="large" @click="userStore.getCode(userinfo.phone,'password')"
                   :disabled="!timeTrue">{{ timeTrue ? '获取验证码' : time + '后获取' }}
         </t-button>
       </t-form-item>
       <t-form-item labelWidth="0">
-        <t-button size="large" block type="submit">重置密码</t-button>
+        <t-button class="mt-4" size="large" block type="submit">重置密码</t-button>
       </t-form-item>
     </t-form>
   </div>
