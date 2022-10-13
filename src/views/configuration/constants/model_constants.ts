@@ -15,6 +15,9 @@ export const TABLE_COLUMNS = [
     colKey: 'name',
     title: '组态名称'
   }, {
+    colKey: 'image',
+    title: '组态图片'
+  }, {
     colKey: 'url',
     title: '组态路径'
   }, {
