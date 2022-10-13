@@ -19,8 +19,15 @@ export class ConfigurationApi {
   // 更新组态
   update = (params, data) => request({
     method: 'PUT',
-    url: '/model',
+    url: '/model/data',
     data,
+    params
+  })
+
+  // 编辑组态
+  edit = (params) => request({
+    method: 'PUT',
+    url: '/model/info',
     params
   })
 
@@ -32,15 +39,29 @@ export class ConfigurationApi {
 
   // 上传图片
   addImage = (data) => request({
-    url: '/model/image',
     method: 'POST',
+    url: '/model/image',
     data
   })
 
   // 删除图片
   deleteImage = (params) => request({
-    url: '/model/image',
     method: 'DELETE',
+    url: '/model/image',
+    params
+  })
+
+  // 禁用组态
+  disable = (params) => request({
+    method: 'PUT',
+    url: '/model/disableModel',
+    params
+  })
+
+  // 启用组态
+  enable = (params) => request({
+    method: 'PUT',
+    url: '/model/enableModel',
     params
   })
 }
