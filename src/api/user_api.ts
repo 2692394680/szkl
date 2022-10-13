@@ -38,7 +38,7 @@ export class UserApi {
   // 重置密码
   passwordReset = (params) => request({
     method: 'GET',
-    url: '/user/updatePassword/' + params.code,
+    url: '/user/updatePassword/',
     params
   })
 
