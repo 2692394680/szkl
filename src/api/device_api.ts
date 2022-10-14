@@ -11,7 +11,7 @@ export class DeviceApi {
   // 修改设备信息
   update = (params) => request({
     method: 'PUT',
-    url: '/device/' + params.id,
+    url: '/device/' + params.deviceId,
     params
   })
 
@@ -36,17 +36,24 @@ export class DeviceApi {
     params
   })
 
+  // 上传设备图片
+  addImage = (data: object) => request({
+    method: 'POST',
+    url: '/device/image',
+    data
+  })
+
+  // 删除图片
+  deleteImage = (params) => request({
+    method: 'DELETE',
+    url: '/model/image',
+    params
+  })
+
   // 获取授权记录列表
   authList = (params: object) => request({
     method: 'GET',
     url: '/device/user/getAuthorization',
-    params
-  })
-
-  // 添加用户设备使用权
-  authAdd = (params: object) => request({
-    method: 'POST',
-    url: '/device/user',
     params
   })
 

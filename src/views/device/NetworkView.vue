@@ -25,7 +25,8 @@ const state = ref(0)
 const deviceVisible = ref(false)
 const deviceType = ref('添加设备')
 // 设备表单
-const deviceForm = ref({
+const deviceForm = reactive({
+  deviceId: '',
   name: '',
   note: '',
   sn: '',
@@ -43,19 +44,28 @@ const addDeviceRules = {
   mac: [{ required: true }],
   location: [{ required: true }],
   brand: [{ required: true }],
-  note: [{ required: true }]
+  note: [{ required: true }],
+  image: [{ required: true }]
 }
 
 // 添加设备按钮回调
 function addDeviceDialog() {
-  Object.keys(deviceForm.value).forEach(key => (deviceForm.value[key] = ''))
+  Object.keys(deviceForm).forEach(key => (deviceForm[key] = ''))
   deviceVisible.value = true
   deviceType.value = '添加设备'
 }
 
 // 编辑设备按钮回调
 function updateDeviceDialog(row) {
-  deviceForm.value = cloneDeep(row)
+  const value = cloneDeep(row)
+  deviceForm.deviceId = value.id
+  deviceForm.name = value.name
+  deviceForm.note = value.note
+  deviceForm.sn = value.sn
+  deviceForm.mac = value.mac
+  deviceForm.image = value.image
+  deviceForm.location = value.location
+  deviceForm.brand = value.brand
   deviceVisible.value = true
   deviceType.value = '编辑设备'
 }
@@ -77,9 +87,9 @@ async function changeDevice(event) {
   Object.assign(deviceForm)
   if (typeof event.validateResult === 'object') return
   if (deviceType.value === '添加设备') {
-    await deviceApi.add(deviceForm.value)
+    await deviceApi.add(deviceForm)
   } else {
-    await deviceApi.update(deviceForm.value)
+    await deviceApi.update(deviceForm)
   }
   await MessagePlugin.success(deviceType.value + '成功')
   await getList()
@@ -100,6 +110,31 @@ async function enableDevice(id) {
   await MessagePlugin.success('启用设备')
 }
 
+// 上传图片
+function addImage(file) {
+  const form = new FormData()
+  form.append('image', file.raw)
+  return new Promise(resolve => {
+    file.percent = 0
+    deviceApi.addImage(form).then((res: any) => {
+      deviceForm.image = res.value
+      resolve({
+        status: 'success',
+        response: { url: res.value }
+      })
+      MessagePlugin.success('上传成功')
+      file.percent = 100
+    })
+  })
+}
+
+// 删除图片
+async function deleteImage() {
+  await deviceApi.deleteImage({ path: deviceForm.image })
+  console.log('删除了图片')
+}
+
+// 前往子用户页面
 function changeToUser(id) {
   // toUserVisible.value = true
   router.push('/user/sub-user?id=' + id)
@@ -112,6 +147,14 @@ function changeToRecord(id) {
 function sortChange() {
   sort.descending = !sort.descending
   getList()
+}
+
+// 关闭新增组态对话框
+function closeDeviceDialog() {
+  if (deviceForm.image) {
+    deleteImage()
+    deviceForm.image = ''
+  }
 }
 
 onMounted(() => {
@@ -145,6 +188,9 @@ onMounted(() => {
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{row.id}}</p>
         </t-tooltip>
       </template>
+      <template #image="{row}">
+        <img class="thumbnail" :src="row.image" alt="">
+      </template>
       <template #createTime="{row}">
         {{ formatDate(row.createTime)}}
       </template>
@@ -164,7 +210,7 @@ onMounted(() => {
 
     <!--添加设备-->
     <t-dialog v-model:visible="deviceVisible" :destroyOnClose="true" :footer="false">
-      <t-form :data="deviceForm" label-align="left" @submit="changeDevice"
+      <t-form :data="deviceForm" label-align="left" @submit="changeDevice" @close="closeDeviceDialog"
               :rules="addDeviceRules">
         <t-form-item labelWidth="0">
           <div class="text-2xl">{{ deviceType }}</div>
@@ -187,6 +233,14 @@ onMounted(() => {
         <t-form-item label="备注" name="note">
           <t-input placeholder="请输入备注" v-model="deviceForm.note"></t-input>
         </t-form-item>
+        <t-form-item name="image" label="图片">
+          <div class="flex flex-col">
+            <img class="thumbnail" :src="deviceForm.image" alt="" v-if="deviceForm.image">
+            <t-upload accept="image/*" name="image" :request-method="addImage" @remove="closeDeviceDialog">
+              <t-button theme="default">上传图片</t-button>
+            </t-upload>
+          </div>
+        </t-form-item>
         <t-form-item>
           <div class="flex justify-end w-full">
             <t-button class="mr-4" theme="default" variant="base" type="reset">重置</t-button>
@@ -203,5 +257,11 @@ onMounted(() => {
 </template>
 
 <style scoped lang="less">
-
+.thumbnail{
+  border-radius: 12px;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
 </style>
