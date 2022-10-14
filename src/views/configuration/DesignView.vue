@@ -9,6 +9,8 @@ import lodash from 'lodash'
 import { storeToRefs } from 'pinia'
 import { getConfigurationStore } from '@/store/modules/configuration_store'
 import SvgIcon from '@/components/SvgIcon.vue'
+import { useRoute } from 'vue-router'
+import { ConfigurationApi } from '@/api/configuration_api'
 
 defineComponent({
   components: {
@@ -17,6 +19,9 @@ defineComponent({
   }
 })
 
+const configurationApi = new ConfigurationApi()
+const route = useRoute()
+// 组件库展开
 const elementExpanded = ref([0, 1])
 // 画布数据
 const { canvasList } = storeToRefs(getConfigurationStore())
@@ -87,45 +92,22 @@ function onDropHandle(e) {
 // 画布组件开始拖动时
 function dragStartHandle() {
   console.log('start')
-  // prevOffsetX.value = canvasList.value[canvasTheIndex.value].x
-  // prevOffsetY.value = canvasList.value[canvasTheIndex.value].y
   if (selectedList.value.length === 0) return
   isMove.value = true
 }
 
 // 画布组件拖动中
 function draggingHandle(data: any) {
-  // if (selectedList.value.length === 0) return
-  // if (isMove.value) {
-  //   selectedList.value.forEach((item) => {
-  //     defaultX.value[item] = lodash.cloneDeep(canvasList.value[item].x)
-  //     defaultY.value[item] = lodash.cloneDeep(canvasList.value[item].y)
-  //   })
-  //   isMove.value = false
-  // } else {
-  //   selectedList.value.forEach((item) => {
-  //     canvasList.value[item].x = data.x - prevOffsetX.value + defaultX[item]
-  //     canvasList.value[item].y = data.y - prevOffsetY.value + defaultY[item]
-  //   })
-  // }
 }
 
 // 画布组件拖动结束
 function dragEndHandle(data: object) {
   Object.assign(canvasList.value[canvasTheIndex.value], data)
-  // canvasList.value[canvasTheIndex.value].x = data.x
-  // canvasList.value[canvasTheIndex.value].y = data.y
-  // prevOffsetX.value = 0
-  // prevOffsetY.value = 0
 }
 
 // 组件调整大小后
 function onResizeStop(data: object) {
   Object.assign(canvasList.value[canvasTheIndex.value], data)
-  // canvasList.value[canvasTheIndex.value].x = x
-  // canvasList.value[canvasTheIndex.value].y = y
-  // canvasList.value[canvasTheIndex.value].w = w
-  // canvasList.value[canvasTheIndex.value].h = h
 }
 
 function onKeyDown(e: any) {
@@ -154,21 +136,6 @@ function onKeyDown(e: any) {
         break
     }
   }
-  // if (e.shiftKey) {
-  //   e.preventDefault()
-  //   this.checkShift = true
-  // }
-  // document.onkeyup = () => {
-  //   if (e.shiftKey) {
-  //     e.preventDefault()
-  //     this.checkShift = false
-  //   }
-  // }
-  // // 监听delete键
-  // if (e.keyCode === 46 && this.theIndex !== 0) {
-  //   this.list.splice(this.theIndex, 1)
-  //   this.theIndex = 0
-  // }
 }
 
 // 复制
@@ -216,9 +183,17 @@ function undoRecord() {
   }
 }
 
+async function getData() {
+  if (route.query.url) {
+    const result = await configurationApi.jsonData(route.query.url)
+    console.log(result)
+  }
+}
+
 onMounted(() => {
   // 监听按键
   window.addEventListener('keydown', onKeyDown)
+  getData()
 })
 onBeforeMount(() => {
   // 解绑按键

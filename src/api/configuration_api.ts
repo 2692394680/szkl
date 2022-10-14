@@ -31,8 +31,8 @@ export class ConfigurationApi {
     params
   })
 
-  // 更新组�获取组态详细信息
-  detail = (url) => request({
+  // 获取在线JSON数据
+  jsonData = (url) => request({
     method: 'GET',
     url
   })

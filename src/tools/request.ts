@@ -20,18 +20,24 @@ request.interceptors.request.use((config: any) => {
 request.interceptors.response.use((res: AxiosResponse) => {
   const userStore = getUserStore()
   nprogress.done()
+  // 过滤组态错误
+  if (res.config.url?.indexOf('http://oss.co4.top/szkelian/json/model/') !== -1) {
+    return res.data
+  }
   if (res.data.code !== 200) {
     if (res.data.msg === '请登录') {
       userStore.logout().then(() => {
       })
     }
-    MessagePlugin.error(res.data.msg).then(() => {})
+    MessagePlugin.error(res.data.msg).then(() => {
+    })
     // eslint-disable-next-line prefer-promise-reject-errors
     return Promise.reject(res.data.msg)
   }
   return res.data
 }, (error: object) => {
-  MessagePlugin.error('服务器繁忙，请稍后重试').then(() => {})
+  MessagePlugin.error('服务器繁忙，请稍后重试').then(() => {
+  })
   return Promise.reject(error)
 })
 

@@ -5,8 +5,10 @@ import { TABLE_COLUMNS } from '@/views/configuration/constants/model_constants'
 import { MessagePlugin } from 'tdesign-vue-next'
 import { getIndexStore } from '@/store/index_store'
 import { cloneDeep } from 'lodash'
+import { useRouter } from 'vue-router'
 
 const indexStore = getIndexStore()
+const router = useRouter()
 const configurationApi = new ConfigurationApi()
 const tableData = ref([])
 const tablePagination = reactive({
@@ -103,12 +105,18 @@ function addImage(file) {
   })
 }
 
+// 前往组态设计
+function goDesign(url) {
+  router.push('/configuration/design?url=' + url)
+}
+
 // 获取模型组态列表
 async function getList() {
   const result: any = await configurationApi.list({
     dataSize: tablePagination.defaultPageSize,
     index: tablePagination.defaultCurrent,
-    isDelete: state.value
+    isDelete: state.value,
+    sort: sort.descending
   })
   tableData.value = result?.value.records
   tablePagination.total = tableData.value.length
@@ -136,8 +144,6 @@ async function addModel() {
   const formData = new FormData()
   formData.append('model', file)
   await configurationApi.add(modelForm, formData)
-
-  // await router.push('Design')
 }
 
 // 编辑模型组态
@@ -213,7 +219,7 @@ onMounted(() => {
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
-          <a class=" mr-4">组态</a>
+          <a class=" mr-4" @click="goDesign(row.url)">组态</a>
           <a class=" mr-4" @click="editModelDialog(row)">编辑</a>
           <t-popconfirm content="确定禁用吗？该操作会导致该组态失效！" theme="danger"
                         @confirm="disableModel(row.id)">
