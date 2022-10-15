@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue'
 import { ELEMENT_LIBRARY } from '@/views/configuration/constants/design_constants'
-import { ref, defineComponent, watch, onMounted, onBeforeMount, shallowRef } from 'vue'
+import { defineComponent, onBeforeMount, onMounted, ref, shallowRef, watch } from 'vue'
 import Vue3DraggableResizable, { DraggableContainer } from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 import { menusEvent } from 'vue3-menus'
 import lodash from 'lodash'
-import { storeToRefs } from 'pinia'
-import { getConfigurationStore } from '@/store/modules/configuration_store'
 import SvgIcon from '@/components/SvgIcon.vue'
 import { useRoute } from 'vue-router'
 import { ConfigurationApi } from '@/api/configuration_api'
+import { MessagePlugin } from 'tdesign-vue-next'
 
 defineComponent({
   components: {
@@ -24,7 +23,7 @@ const route = useRoute()
 // 组件库展开
 const elementExpanded = ref([0, 1])
 // 画布数据
-const { canvasList } = storeToRefs(getConfigurationStore())
+const canvasList = ref<any>([{}])
 // 当前选中组件在画布数据中的下标
 const canvasTheIndex = ref(0)
 // 画布中添加组件时，组件的层级
@@ -134,6 +133,12 @@ function onKeyDown(e: any) {
         })
         canvasList.value.push.apply(canvasList.value, lodash.cloneDeep(copyList.value))
         break
+      case 's':
+        e.preventDefault()
+        // 阻止直接保存网页
+        e.returnValue = false
+        updateData()
+        break
     }
   }
 }
@@ -177,17 +182,30 @@ function redoRecord() {
 
 // 撤销
 function undoRecord() {
-  if (historyTheIndex.value >= 0) {
+  if (historyTheIndex.value > 0) {
     historyTheIndex.value--
     canvasList.value = lodash.cloneDeep(historyList.value[historyTheIndex.value])
   }
 }
 
+// 获取画布数据
 async function getData() {
   if (route.query.url) {
-    const result = await configurationApi.jsonData(route.query.url)
-    console.log(result)
+    canvasList.value = await configurationApi.data(route.query.url)
   }
+}
+
+// 上传画布数据
+async function updateData() {
+  const modelId = route.query.id
+  const file = new File([JSON.stringify(canvasList.value)], modelId + '.json', {
+    type: 'application/json',
+    lastModified: Date.now()
+  })
+  const formData = new FormData()
+  formData.append('model', file)
+  await configurationApi.update({ modelId }, formData)
+  await MessagePlugin.success('保存成功')
 }
 
 onMounted(() => {
@@ -214,10 +232,22 @@ watch(
 <template>
   <t-layout>
     <t-header>
-      <TheHeader></TheHeader>
+      <TheHeader>
+        <div class="text-gray-400 flex">
+          <t-tooltip content="Ctrl+Z" theme="light">
+            <p class="cursor-pointer mr-4" @click="updateData">撤回</p>
+          </t-tooltip>
+          <t-tooltip content="Ctrl+Y" theme="light">
+            <p class="cursor-pointer mr-4" @click="updateData">恢复</p>
+          </t-tooltip>
+          <t-tooltip content="Ctrl+S" theme="light">
+            <p class="cursor-pointer mr-4" @click="updateData">保存</p>
+          </t-tooltip>
+        </div>
+      </TheHeader>
     </t-header>
     <t-layout>
-      <t-aside width="20%">
+      <t-aside width="400px">
         <t-menu :collapsed="false" width="100%" :expanded="elementExpanded"
                 @expand="elementExpanded = $event">
           <t-submenu :title="item.title" :value="index" collapsed v-for="(item, index) in ELEMENT_LIBRARY"
@@ -282,7 +312,7 @@ watch(
           </DraggableContainer>
         </div>
       </t-content>
-      <t-aside width="20%">
+      <t-aside width="400px">
         <div class="design-right" v-show="canvasTheIndex===0">
           <t-tabs v-model="rightTabsValue">
             <!-- 默认插槽 和 具名插槽（panel）都是用来渲染面板内容 -->

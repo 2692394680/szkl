@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getUserStore } from '@/store/modules/user_store'
-import { getConfigurationStore } from '@/store/modules/configuration_store'
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
@@ -26,9 +25,7 @@ export default {
   <div class="header-box">
     <t-head-menu theme="dark" height="120px">
       <p class="text-3xl text-white cursor-pointer mr-4" @click="$router.push('/')">SZKelian</p>
-      <div v-if="$route.name==='Design'" class="text-gray-400">
-        <p class="cursor-pointer mr-8" @click="getConfigurationStore().saveDesignData()">保存</p>
-      </div>
+      <slot v-if="$route.name==='Design'"></slot>
 
       <template #operations>
         <div v-if="token==='main_token'">

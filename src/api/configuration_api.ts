@@ -32,7 +32,7 @@ export class ConfigurationApi {
   })
 
   // 获取在线JSON数据
-  jsonData = (url) => request({
+  data = (url) => request({
     method: 'GET',
     url
   })

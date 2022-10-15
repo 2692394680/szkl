@@ -106,8 +106,8 @@ function addImage(file) {
 }
 
 // 前往组态设计
-function goDesign(url) {
-  router.push('/configuration/design?url=' + url)
+function goDesign(url, id) {
+  router.push(`/configuration/design?url=${url}&id=${id}`)
 }
 
 // 获取模型组态列表
@@ -219,7 +219,7 @@ onMounted(() => {
       </template>
       <template #op="{row}">
         <div class="cursor-pointer text-blue-700">
-          <a class=" mr-4" @click="goDesign(row.url)">组态</a>
+          <a class=" mr-4" @click="goDesign(row.url,row.id)">组态</a>
           <a class=" mr-4" @click="editModelDialog(row)">编辑</a>
           <t-popconfirm content="确定禁用吗？该操作会导致该组态失效！" theme="danger"
                         @confirm="disableModel(row.id)">

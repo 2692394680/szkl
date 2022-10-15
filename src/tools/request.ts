@@ -21,7 +21,7 @@ request.interceptors.response.use((res: AxiosResponse) => {
   const userStore = getUserStore()
   nprogress.done()
   // 过滤组态错误
-  if (res.config.url?.indexOf('http://oss.co4.top/szkelian/json/model/') !== -1) {
+  if (res.config.url?.indexOf('http://oss.co4.top/szkelian/model/') !== -1) {
     return res.data
   }
   if (res.data.code !== 200) {
