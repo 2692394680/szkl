@@ -291,7 +291,7 @@ watch(
             >
               <!--文本框-->
               <input class="textBox" type="text" v-model="item.value"
-                     v-if="item.type==='textBox'"
+                     v-if="item.type==='textBox'" disabled
                      :style="`color:${item.textColor};background-color:${item.bgColor};border-radius:${item.radius}px`"/>
               <!--矩形-->
               <div class="rectangle item" v-if="item.type==='rectangle'"
@@ -328,29 +328,28 @@ watch(
               <div class="box">
                 <t-row :gutter="25">
                   <t-col :span="6">
-                    <t-input label="X：" class="item-input" v-model="canvasList[canvasTheIndex].x"
-                             theme="normal"
-                    ></t-input>
+                    <t-input-number label="X：" class="item-input" v-model="canvasList[canvasTheIndex].x"
+                             theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="Y：" class="item-input" v-model="canvasList[canvasTheIndex].y"
-                             theme="normal"></t-input>
+                    <t-input-number label="Y：" class="item-input" v-model="canvasList[canvasTheIndex].y"
+                             theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="W：" class="item-input" v-model="canvasList[canvasTheIndex].w"
-                             theme="normal"></t-input>
+                    <t-input-number label="W：" class="item-input" v-model="canvasList[canvasTheIndex].w"
+                             theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="H：" class="item-input" v-model="canvasList[canvasTheIndex].h"
-                             theme="normal"></t-input>
+                    <t-input-number label="H：" class="item-input" v-model="canvasList[canvasTheIndex].h"
+                             theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="R：" class="item-input" v-model="canvasList[canvasTheIndex].rotation"
-                             theme="normal"></t-input>
+                    <t-input-number label="R：" class="item-input" v-model="canvasList[canvasTheIndex].rotation"
+                             theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input label="圆角：" class="item-input" v-model.number="canvasList[canvasTheIndex].radius"
-                             theme="normal" v-if="canvasList[canvasTheIndex].radius!==undefined"></t-input>
+                    <t-input-number label="圆角：" class="item-input" v-model.number="canvasList[canvasTheIndex].radius"
+                             theme="column" v-if="canvasList[canvasTheIndex].radius!==undefined" min="0"></t-input-number>
                   </t-col>
                 </t-row>
               </div>
@@ -367,15 +366,11 @@ watch(
             </t-tab-panel>
             <t-tab-panel value="2" label="属性" :destroyOnHide="false">
               <div class="box">
-                <t-input label="名称：" v-model="canvasList[canvasTheIndex].title"></t-input>
-              </div>
-              <div class="box">
                 <t-input label="值：" v-model="canvasList[canvasTheIndex].value"
-                         v-if="canvasList[canvasTheIndex].type==='textbox'"></t-input>
-                <t-row>
+                         v-if="canvasList[canvasTheIndex].type==='textBox'"></t-input>
+                <t-row v-if="canvasList[canvasTheIndex].type==='switch'">
                   <span>开关状态：</span>
-                  <t-switch v-model="canvasList[canvasTheIndex].value"
-                            v-if="canvasList[canvasTheIndex].type==='switch'"></t-switch>
+                  <t-switch v-model="canvasList[canvasTheIndex].value"></t-switch>
                 </t-row>
               </div>
             </t-tab-panel>
@@ -485,6 +480,7 @@ watch(
 
     .item-input {
       margin: 6px 0;
+      width: 100%;
     }
 
     .item-data {
