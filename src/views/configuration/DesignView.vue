@@ -424,10 +424,16 @@ watch(
   height: calc(100vh - 64px);
   position: relative;
   margin: 0 auto;
-
-  //.my-class {
-  //  border: 1px solid #eeeeee;
-  //}
+  background-image:
+      linear-gradient(rgba(255,255,255,.3) 1px, transparent 0),
+      linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 0),
+      linear-gradient(white 1px, transparent 0),
+      linear-gradient(90deg, white 1px, transparent 0);
+  background-size:
+      15px 15px,
+      15px 15px,
+      75px 75px,
+      75px 75px;
 
   .module {
     display: flex;
