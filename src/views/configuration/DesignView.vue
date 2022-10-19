@@ -113,6 +113,7 @@ function onResizeStop(data: object) {
   Object.assign(canvasList.value[canvasTheIndex.value], data)
 }
 
+// 键盘事件
 function onKeyDown(e: any) {
   if (e.ctrlKey || e.metaKey) {
     switch (e.key) {
@@ -144,6 +145,9 @@ function onKeyDown(e: any) {
         updateData()
         break
     }
+  }
+  if (e.key === 'Delete') {
+    deleteHandle()
   }
 }
 
