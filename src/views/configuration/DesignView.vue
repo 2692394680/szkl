@@ -201,7 +201,7 @@ function undoRecord() {
 // 获取画布数据
 async function getData() {
   if (route.query.url) {
-    canvasList.value = await configurationApi.data(route.query.url)
+    canvasList.value = await configurationApi.data(`${route.query.url}?test=${Date.now()}`)
   }
 }
 
