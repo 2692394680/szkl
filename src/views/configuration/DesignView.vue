@@ -61,6 +61,10 @@ const menuList = shallowRef({
       })
       canvasList.value.push.apply(canvasList.value, lodash.cloneDeep(copyList.value))
     }
+  }, {
+    label: '删除',
+    tip: 'Delete',
+    click: () => deleteHandle()
   }]
 })
 
@@ -148,6 +152,12 @@ function copyHandle() {
   copyList.value = [lodash.cloneDeep(canvasList.value[canvasTheIndex.value])]
   // 启用右键菜单粘贴选项
   menuList.value.menus[1].disabled = false
+}
+
+// 删除组件
+function deleteHandle() {
+  canvasList.value.splice(canvasTheIndex.value, 1)
+  MessagePlugin.success('删除成功')
 }
 
 // 右键菜单
