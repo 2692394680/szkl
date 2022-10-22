@@ -24,6 +24,11 @@ export default [{
   component: () => import('@/views/configuration/DesignView.vue'),
   meta: { title: '组态设计', hidden: true }
 }, {
+  path: '/configuration/new-design',
+  name: 'NewDesign',
+  component: () => import('@/views/configuration/NewDesignView.vue'),
+  meta: { title: '新组态设计', hidden: true }
+}, {
   path: '/device',
   name: 'Device',
   component: Layout,

@@ -13,6 +13,7 @@
     "axios": "^0.27.2",
     "chokidar": "^3.5.3",
     "clipboard": "^2.0.11",
+    "fabric": "^5.2.4",
     "json-diff": "^0.9.0",
     "moment": "^2.29.4",
     "nprogress": "^0.2.0",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
+    "@types/fabric": "^4.5.12",
     "@types/node": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
