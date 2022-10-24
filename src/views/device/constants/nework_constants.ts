@@ -126,11 +126,11 @@ export const RECORD_TABLE_COLUMNS = [{
   colKey: 'note',
   title: '备注'
 }, {
-  colKey: 'createById',
-  title: '创建者ID'
+  colKey: 'createByUserName',
+  title: '创建者名称'
 }, {
-  colKey: 'useAuthUserId',
-  title: '使用者ID'
+  colKey: 'useAuthUserName',
+  title: '使用者名称'
 }, {
   colKey: 'createTime',
   title: '创建时间',

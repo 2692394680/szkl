@@ -78,8 +78,9 @@ export const useUserStore = defineStore('user', {
     async isLogin() {
       await userApi.isLogin()
     },
-    async getSubUserList() {
-
+    // 批量查询用户信息
+    async getUserinfoList(idList) {
+      return userApi.userinfoList({ idList })
     }
   }
 })
