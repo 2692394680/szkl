@@ -64,4 +64,11 @@ export class ConfigurationApi {
     url: '/model/enableModel',
     params
   })
+
+  // 删除组态
+  delete = (params) => request({
+    method: 'DELETE',
+    url: '/model/deleteModel',
+    params
+  })
 }

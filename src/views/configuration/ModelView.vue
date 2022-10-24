@@ -157,18 +157,25 @@ async function deleteImage() {
   console.log('删除了图片')
 }
 
-// 禁用设备
-async function disableModel(id) {
-  await configurationApi.disable({ modelId: id })
+// 禁用组态
+async function disableModel(modelId) {
+  await configurationApi.disable({ modelId })
   await getList()
   await MessagePlugin.success('禁用组态')
 }
 
-// 启用设备
-async function enableModel(id) {
-  await configurationApi.enable({ modelId: id })
+// 启用组态
+async function enableModel(modelId) {
+  await configurationApi.enable({ modelId })
   await getList()
   await MessagePlugin.success('启用组态')
+}
+
+// 删除组态
+async function deleteModel(modelId) {
+  await configurationApi.delete({ modelId })
+  await getList()
+  await MessagePlugin.success('删除成功')
 }
 
 onMounted(() => {
@@ -226,6 +233,9 @@ onMounted(() => {
             <a class="text-red-600 mr-4" v-show="state===0">禁用</a>
           </t-popconfirm>
           <a class="mr-4" v-show="state===1" @click="enableModel(row.id)">启用</a>
+          <t-popconfirm content="确定删除吗？才操作会导致无法恢复！" theme="danger" @confirm="deleteModel(row.id)">
+            <a class="mr-4 text-red-600">删除</a>
+          </t-popconfirm>
         </div>
       </template>
     </t-table>
