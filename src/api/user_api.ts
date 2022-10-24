@@ -1,4 +1,5 @@
 import request from '@/tools/request'
+import qs from 'qs'
 
 export class UserApi {
   // 用户登录
@@ -103,5 +104,15 @@ export class UserApi {
     method: 'PUT',
     url: '/user/updateUserPassword',
     params
+  })
+
+  // 批量查询用户信息
+  userinfoList = (params) => request({
+    method: 'GET',
+    url: '/user/getUserListByIds',
+    params,
+    paramsSerializer: params => {
+      return qs.stringify(params, { indices: false })
+    }
   })
 }
