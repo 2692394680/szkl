@@ -7,13 +7,13 @@ import { getIndexStore } from '@/store/index_store'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { getUserStore } from '@/store/modules/user_store'
-import request from '@/tools/request'
 
 const route = useRoute()
 const router = useRouter()
 const { userinfo } = storeToRefs(getUserStore())
 const deviceApi = new DeviceApi()
 const indexStore = getIndexStore()
+const userStore = getUserStore()
 const deviceList = ref<any>([])
 const tablePagination = reactive({
   defaultCurrent: 1,
@@ -43,6 +43,13 @@ async function getList() {
   })
   deviceList.value = result.value.records
   deviceList.value = deviceList.value.filter(item => item.createById !== userinfo.value.id)
+  const createByIdList:any = []
+  deviceList.value.forEach(item => createByIdList.push(item.createById))
+  const { value: createByUserNameList }:any = await userStore.getUserinfoList(createByIdList)
+  deviceList.value.forEach(item => {
+    item.createByUserName = createByUserNameList[item.createById].name
+    console.log(createByUserNameList[item.createById].name)
+  })
   tablePagination.total = deviceList.value.length
 }
 
@@ -119,10 +126,10 @@ onMounted(() => {
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.id)">{{ row.id }}</p>
         </t-tooltip>
       </template>
-      <template #createById="{row}">
-        <t-tooltip content="点击复制" theme="light">
+      <template #createByUserName="{row}">
+        <t-tooltip :content="'用户ID：'+row.createById" theme="light">
           <p class="cursor-pointer copy" @click="indexStore.copyHandle(row.createById)">
-            {{ row.createById }}</p>
+            {{ row.createByUserName }}</p>
         </t-tooltip>
       </template>
       <template #createTime="{row}">

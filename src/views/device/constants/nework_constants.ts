@@ -78,8 +78,8 @@ export const AUTH_TABLE_COLUMNS = [{
   colKey: 'note',
   title: '备注'
 }, {
-  colKey: 'createById',
-  title: '创建者ID'
+  colKey: 'createByUserName',
+  title: '创建者名称'
 }, {
   colKey: 'createTime',
   title: '创建时间',
