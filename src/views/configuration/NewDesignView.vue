@@ -11,7 +11,8 @@ const elementExpanded = ref([0, 1])
 const elementOffsetX = ref(0)
 const elementOffsetY = ref(0)
 // 声明画布
-let canvas:any
+let canvas
+const canvasEl = ref()
 // 组件库
 const elementLibrary = ref([
   {
@@ -48,7 +49,6 @@ function elementDragEndHandle(e: any, item) {
   item.data.top = (e.clientY - 64 - vpt[5]) / vpt[0]
   // 添加到画布
   canvas.add(cloneDeep(item.data))
-  console.log(canvas.toObject())
   // 清除缓存
   e.dataTransfer.clearData()
 }
@@ -66,10 +66,10 @@ function initCanvas() {
       lineMargin: 2
     }
   })
-
   guideline.init()
 
-  canvas.on('mouse:down', opt => { // 鼠标按下时触发
+  // 鼠标按下时触发
+  canvas.on('mouse:down', opt => {
     const evt = opt.e
     if (evt.altKey) { // 是否按住alt
       canvas.isDragging = true // isDragging 是自定义的，开启移动状态
@@ -77,8 +77,8 @@ function initCanvas() {
       canvas.lastPosY = evt.clientY // lastPosY 是自定义的
     }
   })
-
-  canvas.on('mouse:move', opt => { // 鼠标移动时触发
+  // 鼠标移动时触发
+  canvas.on('mouse:move', opt => {
     elementOffsetX.value = opt.e.offsetX
     elementOffsetY.value = opt.e.offsetY
     if (canvas.isDragging) {
@@ -91,8 +91,8 @@ function initCanvas() {
       canvas.lastPosY = evt.clientY
     }
   })
-
-  canvas.on('mouse:up', opt => { // 鼠标松开时触发
+  // 鼠标松开时触发
+  canvas.on('mouse:up', () => {
     canvas.setViewportTransform(canvas.viewportTransform) // 设置此画布实例的视口转换
     canvas.isDragging = false // 关闭移动状态
   })
@@ -120,44 +120,64 @@ function initCanvas() {
   })
 }
 
+// 画布自适应
+function adaptiveCanvas(isFirst:boolean) {
+  if (canvas) {
+    const width = canvasEl.value.clientWidth
+    const height = canvasEl.value.clientHeight
+    // 首次进入页面减去两个侧边栏宽度
+    canvas.setWidth(isFirst ? width - 800 : width)
+    canvas.setHeight(height)
+  }
+}
+
 onMounted(() => {
   initCanvas()
+  adaptiveCanvas(true)
+  window.onresize = () => {
+    adaptiveCanvas(false)
+  }
 })
 </script>
 
 <template>
-<t-layout>
-  <t-header>
-    <TheHeader></TheHeader>
-  </t-header>
   <t-layout>
-    <t-aside width="400px">
-      <t-menu :collapsed="false" width="100%" :expanded="elementExpanded"
-              @expand="elementExpanded = $event">
-        <t-submenu :title="item.title" :value="index" collapsed v-for="(item, index) in elementLibrary"
-                   :key="index">
-          <div class="element-row">
-            <t-row>
-              <t-col :span="3" v-for="(item2, index2) in item.list" :key="index2">
-                <div class="element-item" :draggable="true"
-                     @dragstart="elementDragStartHandle($event, item2)" @dragend="elementDragEndHandle($event,item2)">
-                  <img src="@/assets/border.png" alt=""/>
-                  <div>{{ item2.title }}</div>
-                </div>
-              </t-col>
-            </t-row>
-          </div>
-        </t-submenu>
-      </t-menu>
-    </t-aside>
-    <t-content>
-      <canvas id="canvas" width="1000" height="1000" style="border:1px solid #cccccc;"></canvas>
-    </t-content>
-    <t-aside width="400px">
+    <t-header>
+      <TheHeader></TheHeader>
+    </t-header>
+    <t-layout>
+      <t-aside width="400px">
+        <t-menu :collapsed="false" width="400px" :expanded="elementExpanded"
+                @expand="elementExpanded = $event">
+          <t-submenu :title="item.title" :value="index" collapsed v-for="(item, index) in elementLibrary"
+                     :key="index">
+            <div class="element-row">
+              <t-row>
+                <t-col :span="3" v-for="(item2, index2) in item.list" :key="index2">
+                  <div class="element-item" :draggable="true"
+                       @dragstart="elementDragStartHandle($event, item2)"
+                       @dragend="elementDragEndHandle($event,item2)">
+                    <img src="@/assets/border.png" alt=""/>
+                    <div>{{ item2.title }}</div>
+                  </div>
+                </t-col>
+              </t-row>
+            </div>
+          </t-submenu>
+        </t-menu>
+      </t-aside>
 
-    </t-aside>
+      <t-content>
+        <div class="bg-cyan-800" ref="canvasEl">
+          <canvas id="canvas" width="1000" height="1000"></canvas>
+        </div>
+      </t-content>
+
+      <t-aside width="400px">
+
+      </t-aside>
+    </t-layout>
   </t-layout>
-</t-layout>
 </template>
 
 <style scoped lang="less">
