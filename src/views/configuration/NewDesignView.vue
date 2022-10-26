@@ -38,6 +38,8 @@ function elementDragStartHandle(e: any, item: object) {
 
 // 组件库拖动结束
 function elementDragEndHandle(e: any, item) {
+  // 组件没有拖放置画布则不添加
+  if (e.clientX < 400 || e.clientY < 64) return
   const vpt = canvas.viewportTransform
   // 减去左侧边栏的宽度
   // 减去移动画布偏移
@@ -46,6 +48,7 @@ function elementDragEndHandle(e: any, item) {
   item.data.top = (e.clientY - 64 - vpt[5]) / vpt[0]
   // 添加到画布
   canvas.add(cloneDeep(item.data))
+  console.log(canvas.toObject())
   // 清除缓存
   e.dataTransfer.clearData()
 }
