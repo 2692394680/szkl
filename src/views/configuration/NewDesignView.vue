@@ -3,6 +3,7 @@ import TheHeader from '@/components/TheHeader.vue'
 import { fabric } from 'fabric'
 import { onMounted, ref } from 'vue'
 import { cloneDeep } from 'lodash'
+import { AlignGuidelines } from 'fabric-guideline-plugin'
 
 // 组件库展开
 const elementExpanded = ref([0, 1])
@@ -53,6 +54,18 @@ function elementDragEndHandle(e: any, item) {
 function initCanvas() {
   canvas = new fabric.Canvas('canvas')
 
+  // 初始化辅助线
+  const guideline = new AlignGuidelines({
+    canvas,
+    aligningOptions: {
+      lineColor: '#32D10A',
+      lineWidth: 2,
+      lineMargin: 2
+    }
+  })
+
+  guideline.init()
+
   canvas.on('mouse:down', opt => { // 鼠标按下时触发
     const evt = opt.e
     if (evt.altKey) { // 是否按住alt
@@ -70,7 +83,6 @@ function initCanvas() {
       const vpt = canvas.viewportTransform // 聚焦视图的转换
       vpt[4] += evt.clientX - canvas.lastPosX
       vpt[5] += evt.clientY - canvas.lastPosY
-      console.log(vpt[4], vpt[5])
       canvas.requestRenderAll() // 重新渲染
       canvas.lastPosX = evt.clientX
       canvas.lastPosY = evt.clientY
@@ -90,7 +102,6 @@ function initCanvas() {
     zoom *= 0.999 ** delta
     if (zoom > 20) zoom = 20
     if (zoom < 0.01) zoom = 0.01
-    console.log(canvas.viewportTransform)
 
     // 设置画布缩放比例
     // 关键点！！！
