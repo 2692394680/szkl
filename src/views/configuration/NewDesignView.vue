@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue'
 import { fabric } from 'fabric'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, shallowRef } from 'vue'
 import { cloneDeep } from 'lodash'
 import { AlignGuidelines } from 'fabric-guideline-plugin'
+import { menusEvent } from 'vue3-menus'
 
 // 组件库展开
 const elementExpanded = ref([0, 1])
@@ -13,6 +14,8 @@ const elementOffsetY = ref(0)
 // 声明画布
 let canvas
 const canvasEl = ref()
+// 当前选中组件
+const theTarget = ref()
 // 组件库
 const elementLibrary = ref([
   {
@@ -31,6 +34,72 @@ const elementLibrary = ref([
     ]
   }
 ])
+// 右键菜单数据
+const menuList = shallowRef({
+  menus: [{
+    label: '复制',
+    tip: 'Ctrl+C',
+    disabled: true,
+    click: () => copyHandle()
+  }, {
+    label: '粘贴',
+    tip: 'Ctrl+V',
+    disabled: true,
+    click: (menu, event) => {
+      let offsetX = 0
+      let offsetY = 0
+      const list = cloneDeep(copyList.value)
+      list.forEach((item, index) => {
+        item.id = Date.parse(Date())
+        if (item.group) {
+          delete item.group
+          if (index === 0) {
+            if (item.left < 0) {
+              offsetX = -item.left
+            }
+            if (item.top < 0) {
+              offsetY = -item.top
+            }
+          }
+          item.left += event.x - 400 + offsetX
+          item.top += event.y - 64 + offsetY
+        } else {
+          item.left = event.x - 400
+          item.top = event.y - 64
+        }
+        canvas.add(item)
+      })
+    }
+  }, {
+    label: '删除',
+    tip: 'Delete'
+    // click: () => deleteHandle()
+  }]
+})
+// 剪切板数据
+const copyList = ref()
+
+// 右键菜单
+function rightClick(event: MouseEvent) {
+  menusEvent(event, menuList.value, event)
+  event.preventDefault()
+}
+
+// 复制
+function copyHandle() {
+  copyList.value = []
+  if (theTarget.value.dirty) {
+    const list = theTarget.value.getObjects()
+    list.forEach(item => {
+      copyList.value.push(item)
+    })
+  } else {
+    copyList.value = [theTarget.value]
+  }
+  console.log(copyList.value)
+  // 启用右键菜单粘贴选项
+  menuList.value.menus[1].disabled = false
+}
 
 // 组件库拖动开始
 function elementDragStartHandle(e: any, item: object) {
@@ -44,6 +113,8 @@ function elementDragEndHandle(e: any, item) {
   const vpt = canvas.viewportTransform
   // 时间码id
   item.data.id = Date.parse(Date())
+  // 名称
+  item.data.title = item.title
   // 减去左侧边栏的宽度
   // 减去移动画布偏移
   item.data.left = (e.clientX - 400 - vpt[4]) / vpt[0]
@@ -57,7 +128,9 @@ function elementDragEndHandle(e: any, item) {
 
 // 初始化画布
 function initCanvas() {
-  canvas = new fabric.Canvas('canvas')
+  canvas = new fabric.Canvas('canvas', {
+    fireRightClick: true
+  })
 
   // 画布网格背景
   const backgroundColor = {
@@ -85,6 +158,14 @@ function initCanvas() {
       canvas.isDragging = true // isDragging 是自定义的，开启移动状态
       canvas.lastPosX = evt.clientX // lastPosX 是自定义的
       canvas.lastPosY = evt.clientY // lastPosY 是自定义的
+    }
+    if (opt.target) {
+      theTarget.value = opt.target
+      // 启用右键菜单复制选项
+      menuList.value.menus[0].disabled = false
+    } else {
+      theTarget.value = null
+      menuList.value.menus[0].disabled = true
     }
   })
   // 鼠标移动时触发
@@ -178,13 +259,34 @@ onMounted(() => {
       </t-aside>
 
       <t-content>
-        <div class="canvasContainer" ref="canvasEl">
+        <div class="canvasContainer" ref="canvasEl" @contextmenu="rightClick">
           <canvas id="canvas" width="1000" height="1000"></canvas>
         </div>
       </t-content>
 
       <t-aside width="400px">
-
+        <div class="design-right" v-show="!theTarget">
+          <t-tabs>
+            <t-tab-panel label="页面设置" :destroyOnHide="false">
+              <p class="p-4">页面设置</p>
+            </t-tab-panel>
+          </t-tabs>
+        </div>
+        <div class="design-right" v-if="theTarget">
+          <t-tabs>
+            <t-tab-panel value="1" label="样式" :destroyOnHide="false">
+              <div class="box"></div>
+            </t-tab-panel>
+            <t-tab-panel value="2" label="属性" :destroyOnHide="false">
+              <div class="box">
+                名称：{{ theTarget.title }}
+              </div>
+              <div class="box">
+                <t-input label="值：" v-model="theTarget.value"></t-input>
+              </div>
+            </t-tab-panel>
+          </t-tabs>
+        </div>
       </t-aside>
     </t-layout>
   </t-layout>
@@ -224,4 +326,47 @@ onMounted(() => {
   //background-size: 15px 15px, 15px 15px, 75px 75px, 75px 75px;
 }
 
+//属性栏
+.design-right {
+  padding: 10px 15px;
+  z-index: 900;
+
+  .box {
+    padding: 10px 5px;
+    border-bottom: 1px solid #eeeeee;
+    color: #8292AC;
+
+    .title {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #545454;
+    }
+
+    .item-input {
+      margin: 6px 0;
+      width: 100%;
+    }
+
+    .item-data {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      text-align: left;
+
+      .name {
+        //width: 100px;
+      }
+
+      .icon {
+        cursor: pointer;
+      }
+    }
+
+    .item-color {
+      margin: 15px 5px;
+      padding: 5px;
+      border: 1px solid #c0c0c0;
+    }
+  }
+}
 </style>
