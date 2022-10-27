@@ -23,7 +23,7 @@ const elementLibrary = ref([
         data: new fabric.Rect({
           left: 100, // 距离画布左侧的距离，单位是像素
           top: 100, // 距离画布上边的距离
-          fill: 'red', // 填充的颜色
+          fill: 'blue', // 填充的颜色
           width: 60, // 方形的宽度
           height: 60// 方形的高度
         })
@@ -42,6 +42,8 @@ function elementDragEndHandle(e: any, item) {
   // 组件没有拖放置画布则不添加
   if (e.clientX < 400 || e.clientY < 64) return
   const vpt = canvas.viewportTransform
+  // 时间码id
+  item.data.id = Date.parse(Date())
   // 减去左侧边栏的宽度
   // 减去移动画布偏移
   item.data.left = (e.clientX - 400 - vpt[4]) / vpt[0]
@@ -57,11 +59,18 @@ function elementDragEndHandle(e: any, item) {
 function initCanvas() {
   canvas = new fabric.Canvas('canvas')
 
+  // 画布网格背景
+  const backgroundColor = {
+    source: 'http://smallnew.oss-cn-hangzhou.aliyuncs.com/image/0471d512-12bc-4fd3-b3ed-dabd4d0afa67/canvas-brid.png',
+    repeat: 'repeat'
+  }
+  canvas.setBackgroundColor(backgroundColor, canvas.renderAll.bind(canvas))
+
   // 初始化辅助线
   const guideline = new AlignGuidelines({
     canvas,
     aligningOptions: {
-      lineColor: '#32D10A',
+      lineColor: '#0d99ff',
       lineWidth: 2,
       lineMargin: 2
     }
@@ -70,6 +79,7 @@ function initCanvas() {
 
   // 鼠标按下时触发
   canvas.on('mouse:down', opt => {
+    console.log(opt.target)
     const evt = opt.e
     if (evt.altKey) { // 是否按住alt
       canvas.isDragging = true // isDragging 是自定义的，开启移动状态
@@ -121,7 +131,7 @@ function initCanvas() {
 }
 
 // 画布自适应
-function adaptiveCanvas(isFirst:boolean) {
+function adaptiveCanvas(isFirst: boolean) {
   if (canvas) {
     const width = canvasEl.value.clientWidth
     const height = canvasEl.value.clientHeight
@@ -168,7 +178,7 @@ onMounted(() => {
       </t-aside>
 
       <t-content>
-        <div class="bg-cyan-800" ref="canvasEl">
+        <div class="canvasContainer" ref="canvasEl">
           <canvas id="canvas" width="1000" height="1000"></canvas>
         </div>
       </t-content>
@@ -203,4 +213,15 @@ onMounted(() => {
     height: 40px;
   }
 }
+
+.canvasContainer {
+  background-color: #eeeeee;
+  height: calc(100vh - 64px);
+  //background-image: linear-gradient(rgba(255, 255, 255, .3) 4px, transparent 0),
+  //linear-gradient(90deg, rgba(255, 255, 255, .3) 4px, transparent 0),
+  //linear-gradient(white 4px, transparent 0),
+  //linear-gradient(90deg, white 4px, transparent 0);
+  //background-size: 15px 15px, 15px 15px, 75px 75px, 75px 75px;
+}
+
 </style>
