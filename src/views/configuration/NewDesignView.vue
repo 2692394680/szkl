@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import TheHeader from '@/components/TheHeader.vue'
 import { fabric } from 'fabric'
-import { onMounted, ref, shallowRef } from 'vue'
+import { onMounted, ref, shallowRef, toRaw } from 'vue'
 import { cloneDeep } from 'lodash'
 import { AlignGuidelines } from 'fabric-guideline-plugin'
 import { menusEvent } from 'vue3-menus'
@@ -15,7 +15,7 @@ const elementOffsetY = ref(0)
 let canvas
 const canvasEl = ref()
 // 当前选中组件
-let theTarget
+const theTarget = ref()
 // 组件库
 const elementLibrary = ref([
   {
@@ -88,13 +88,13 @@ function rightClick(event: MouseEvent) {
 // 复制
 function copyHandle() {
   copyList.value = []
-  if (theTarget.dirty) {
-    const list = theTarget.getObjects()
+  if (theTarget.value.dirty) {
+    const list = theTarget.value.getObjects()
     list.forEach(item => {
       copyList.value.push(item)
     })
   } else {
-    copyList.value = [theTarget]
+    copyList.value = [theTarget.value]
   }
   // 启用右键菜单粘贴选项
   menuList.value.menus[1].disabled = false
@@ -102,11 +102,12 @@ function copyHandle() {
 
 // 删除
 function deleteHandle() {
-  if (theTarget.dirty) {
-    canvas.remove(...theTarget.getObjects())
+  const data = toRaw(theTarget.value)
+  if (data.dirty) {
+    canvas.remove(...data.getObjects())
     canvas.discardActiveObject()
   } else {
-    canvas.remove(theTarget)
+    canvas.remove(data)
   }
 }
 
@@ -168,11 +169,11 @@ function initCanvas() {
       canvas.lastPosY = evt.clientY // lastPosY 是自定义的
     }
     if (opt.target) {
-      theTarget = opt.target
+      theTarget.value = opt.target
       // 启用右键菜单复制选项
       menuList.value.menus[0].disabled = false
     } else {
-      theTarget = null
+      theTarget.value = null
       menuList.value.menus[0].disabled = true
     }
   })
