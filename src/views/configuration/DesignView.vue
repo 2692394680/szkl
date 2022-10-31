@@ -343,27 +343,30 @@ watch(
                 <t-row :gutter="25">
                   <t-col :span="6">
                     <t-input-number label="X：" class="item-input" v-model="canvasList[canvasTheIndex].x"
-                             theme="column" min="0"></t-input-number>
+                                    theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
                     <t-input-number label="Y：" class="item-input" v-model="canvasList[canvasTheIndex].y"
-                             theme="column" min="0"></t-input-number>
+                                    theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
                     <t-input-number label="W：" class="item-input" v-model="canvasList[canvasTheIndex].w"
-                             theme="column" min="0"></t-input-number>
+                                    theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
                     <t-input-number label="H：" class="item-input" v-model="canvasList[canvasTheIndex].h"
-                             theme="column" min="0"></t-input-number>
+                                    theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input-number label="R：" class="item-input" v-model="canvasList[canvasTheIndex].rotation"
-                             theme="column" min="0"></t-input-number>
+                    <t-input-number label="R：" class="item-input"
+                                    v-model="canvasList[canvasTheIndex].rotation"
+                                    theme="column" min="0"></t-input-number>
                   </t-col>
                   <t-col :span="6">
-                    <t-input-number label="圆角：" class="item-input" v-model.number="canvasList[canvasTheIndex].radius"
-                             theme="column" v-if="canvasList[canvasTheIndex].radius!==undefined" min="0"></t-input-number>
+                    <t-input-number label="圆角：" class="item-input"
+                                    v-model.number="canvasList[canvasTheIndex].radius"
+                                    theme="column" v-if="canvasList[canvasTheIndex].radius!==undefined"
+                                    min="0"></t-input-number>
                   </t-col>
                 </t-row>
               </div>
@@ -433,16 +436,14 @@ watch(
   height: calc(100vh - 64px);
   position: relative;
   margin: 0 auto;
-  background-image:
-      linear-gradient(rgba(255,255,255,.3) 1px, transparent 0),
-      linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 0),
-      linear-gradient(white 1px, transparent 0),
-      linear-gradient(90deg, white 1px, transparent 0);
-  background-size:
-      15px 15px,
-      15px 15px,
-      75px 75px,
-      75px 75px;
+  background-image: linear-gradient(rgba(255, 255, 255, .3) 1px, transparent 0),
+  linear-gradient(90deg, rgba(255, 255, 255, .3) 1px, transparent 0),
+  linear-gradient(white 1px, transparent 0),
+  linear-gradient(90deg, white 1px, transparent 0);
+  background-size: 15px 15px,
+  15px 15px,
+  75px 75px,
+  75px 75px;
 
   .module {
     display: flex;
