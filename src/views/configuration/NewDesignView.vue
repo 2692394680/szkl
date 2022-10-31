@@ -15,7 +15,7 @@ const elementOffsetY = ref(0)
 let canvas
 const canvasEl = ref()
 // 当前选中组件
-const theTarget = ref()
+let theTarget
 // 组件库
 const elementLibrary = ref([
   {
@@ -72,8 +72,8 @@ const menuList = shallowRef({
     }
   }, {
     label: '删除',
-    tip: 'Delete'
-    // click: () => deleteHandle()
+    tip: 'Delete',
+    click: () => deleteHandle()
   }]
 })
 // 剪切板数据
@@ -88,17 +88,26 @@ function rightClick(event: MouseEvent) {
 // 复制
 function copyHandle() {
   copyList.value = []
-  if (theTarget.value.dirty) {
-    const list = theTarget.value.getObjects()
+  if (theTarget.dirty) {
+    const list = theTarget.getObjects()
     list.forEach(item => {
       copyList.value.push(item)
     })
   } else {
-    copyList.value = [theTarget.value]
+    copyList.value = [theTarget]
   }
-  console.log(copyList.value)
   // 启用右键菜单粘贴选项
   menuList.value.menus[1].disabled = false
+}
+
+// 删除
+function deleteHandle() {
+  if (theTarget.dirty) {
+    canvas.remove(...theTarget.getObjects())
+    canvas.discardActiveObject()
+  } else {
+    canvas.remove(theTarget)
+  }
 }
 
 // 组件库拖动开始
@@ -152,7 +161,6 @@ function initCanvas() {
 
   // 鼠标按下时触发
   canvas.on('mouse:down', opt => {
-    console.log(opt.target)
     const evt = opt.e
     if (evt.altKey) { // 是否按住alt
       canvas.isDragging = true // isDragging 是自定义的，开启移动状态
@@ -160,11 +168,11 @@ function initCanvas() {
       canvas.lastPosY = evt.clientY // lastPosY 是自定义的
     }
     if (opt.target) {
-      theTarget.value = opt.target
+      theTarget = opt.target
       // 启用右键菜单复制选项
       menuList.value.menus[0].disabled = false
     } else {
-      theTarget.value = null
+      theTarget = null
       menuList.value.menus[0].disabled = true
     }
   })
